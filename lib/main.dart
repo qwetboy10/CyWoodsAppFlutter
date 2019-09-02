@@ -53,6 +53,7 @@ class MyApp extends StatefulWidget {
 class MyAppState extends State<MyApp> {
   void initState() {
     super.initState();
+
     initPlatformState();
     Profile.getDefaultProfile().then((Profile p) {
       if (p == null) return;
@@ -71,7 +72,7 @@ class MyAppState extends State<MyApp> {
         new FlutterLocalNotificationsPlugin();
 // initialise the plugin. app_icon needs to be a added as a drawable resource to the Android head project
     var initializationSettingsAndroid =
-        new AndroidInitializationSettings('app_icon');
+        new AndroidInitializationSettings('@mipmap/ic_launcher');
     var initializationSettingsIOS = new IOSInitializationSettings();
     var initializationSettings = new InitializationSettings(
         initializationSettingsAndroid, initializationSettingsIOS);
@@ -89,7 +90,7 @@ class MyAppState extends State<MyApp> {
       StateData.logInfo('Notification Fetch, ${ass.length} found');
       if (true || ass.length != 0) {
         var androidPlatformChannelSpecifics = AndroidNotificationDetails(
-            'Grades', 'Cy Woods App Grades', 'Recieve notifications of grades',
+            '0', 'Cy Woods App Grades', 'Recieve notifications of grades',
             importance: Importance.Max,
             priority: Priority.High,
             ticker: 'New Grade');
