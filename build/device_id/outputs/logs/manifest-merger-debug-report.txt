@@ -1,0 +1,23 @@
+-- Merging decision tree log ---
+manifest
+ADDED from /home/tristan/Files/ProgramFiles/flutter/.pub-cache/hosted/pub.dartlang.org/device_id-0.2.0/android/src/main/AndroidManifest.xml:1:1-4:12
+INJECTED from /home/tristan/Files/ProgramFiles/flutter/.pub-cache/hosted/pub.dartlang.org/device_id-0.2.0/android/src/main/AndroidManifest.xml:1:1-4:12
+INJECTED from /home/tristan/Files/ProgramFiles/flutter/.pub-cache/hosted/pub.dartlang.org/device_id-0.2.0/android/src/main/AndroidManifest.xml:1:1-4:12
+	package
+		ADDED from /home/tristan/Files/ProgramFiles/flutter/.pub-cache/hosted/pub.dartlang.org/device_id-0.2.0/android/src/main/AndroidManifest.xml:2:3-33
+		INJECTED from /home/tristan/Files/ProgramFiles/flutter/.pub-cache/hosted/pub.dartlang.org/device_id-0.2.0/android/src/main/AndroidManifest.xml
+		INJECTED from /home/tristan/Files/ProgramFiles/flutter/.pub-cache/hosted/pub.dartlang.org/device_id-0.2.0/android/src/main/AndroidManifest.xml
+	xmlns:android
+		ADDED from /home/tristan/Files/ProgramFiles/flutter/.pub-cache/hosted/pub.dartlang.org/device_id-0.2.0/android/src/main/AndroidManifest.xml:1:11-69
+uses-permission#android.permission.READ_PHONE_STATE
+ADDED from /home/tristan/Files/ProgramFiles/flutter/.pub-cache/hosted/pub.dartlang.org/device_id-0.2.0/android/src/main/AndroidManifest.xml:3:5-75
+	android:name
+		ADDED from /home/tristan/Files/ProgramFiles/flutter/.pub-cache/hosted/pub.dartlang.org/device_id-0.2.0/android/src/main/AndroidManifest.xml:3:22-72
+uses-sdk
+INJECTED from /home/tristan/Files/ProgramFiles/flutter/.pub-cache/hosted/pub.dartlang.org/device_id-0.2.0/android/src/main/AndroidManifest.xml reason: use-sdk injection requested
+INJECTED from /home/tristan/Files/ProgramFiles/flutter/.pub-cache/hosted/pub.dartlang.org/device_id-0.2.0/android/src/main/AndroidManifest.xml
+INJECTED from /home/tristan/Files/ProgramFiles/flutter/.pub-cache/hosted/pub.dartlang.org/device_id-0.2.0/android/src/main/AndroidManifest.xml
+	android:minSdkVersion
+		INJECTED from /home/tristan/Files/ProgramFiles/flutter/.pub-cache/hosted/pub.dartlang.org/device_id-0.2.0/android/src/main/AndroidManifest.xml
+		ADDED from /home/tristan/Files/ProgramFiles/flutter/.pub-cache/hosted/pub.dartlang.org/device_id-0.2.0/android/src/main/AndroidManifest.xml
+		INJECTED from /home/tristan/Files/ProgramFiles/flutter/.pub-cache/hosted/pub.dartlang.org/device_id-0.2.0/android/src/main/AndroidManifest.xml

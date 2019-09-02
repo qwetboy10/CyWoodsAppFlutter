@@ -1,0 +1,4 @@
+#Mon Sep 02 16:34:43 CDT 2019
+base.0=/home/tristan/CyWoodsAppFlutter/build/app/intermediates/transforms/dexMerger/release/0
+path.0=classes.dex
+renamed.0=classes.dex

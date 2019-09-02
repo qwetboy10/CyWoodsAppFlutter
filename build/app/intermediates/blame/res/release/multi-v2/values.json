@@ -1,0 +1,38 @@
+{
+    "logs": [
+        {
+            "outputFile": "/home/tristan/CyWoodsAppFlutter/build/app/intermediates/incremental/mergeReleaseResources/merged.dir/values/values.xml",
+            "map": [
+                {
+                    "source": "/home/tristan/.gradle/caches/transforms-1/files-1.1/tsbackgroundfetch-0.2.0.aar/70bcc7be50b07d90c22290a53a4a07a6/res/values/values.xml",
+                    "from": {
+                        "startLines": "2",
+                        "startColumns": "4",
+                        "startOffsets": "55",
+                        "endColumns": "54",
+                        "endOffsets": "105"
+                    }
+                },
+                {
+                    "source": "/home/tristan/CyWoodsAppFlutter/android/app/src/main/res/values/styles.xml",
+                    "from": {
+                        "startLines": "2",
+                        "startColumns": "4",
+                        "startOffsets": "55",
+                        "endLines": "6",
+                        "endColumns": "12",
+                        "endOffsets": "347"
+                    },
+                    "to": {
+                        "startLines": "3",
+                        "startColumns": "4",
+                        "startOffsets": "110",
+                        "endLines": "7",
+                        "endColumns": "12",
+                        "endOffsets": "402"
+                    }
+                }
+            ]
+        }
+    ]
+}

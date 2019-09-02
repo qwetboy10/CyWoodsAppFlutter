@@ -83,7 +83,7 @@ class FinalCalculatorState extends State<FinalCalculator> {
                         )).toList(),
                       )
                     : buildFinalWidget(context, index, classes[index]),
-                itemCount: classes.length,
+                itemCount: classes.length + 1,
               ),
       );
     } catch (e, t) {

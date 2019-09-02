@@ -4,6 +4,7 @@ import io.flutter.plugin.common.PluginRegistry;
 import com.transistorsoft.flutter.backgroundfetch.BackgroundFetchPlugin;
 import com.mranuran.clipboardmanager.ClipboardManagerPlugin;
 import com.notrait.deviceid.DeviceIdPlugin;
+import com.dexterous.flutterlocalnotifications.FlutterLocalNotificationsPlugin;
 import io.flutter.plugins.pathprovider.PathProviderPlugin;
 import io.flutter.plugins.sensors.SensorsPlugin;
 import io.flutter.plugins.sharedpreferences.SharedPreferencesPlugin;
@@ -20,6 +21,7 @@ public final class GeneratedPluginRegistrant {
     BackgroundFetchPlugin.registerWith(registry.registrarFor("com.transistorsoft.flutter.backgroundfetch.BackgroundFetchPlugin"));
     ClipboardManagerPlugin.registerWith(registry.registrarFor("com.mranuran.clipboardmanager.ClipboardManagerPlugin"));
     DeviceIdPlugin.registerWith(registry.registrarFor("com.notrait.deviceid.DeviceIdPlugin"));
+    FlutterLocalNotificationsPlugin.registerWith(registry.registrarFor("com.dexterous.flutterlocalnotifications.FlutterLocalNotificationsPlugin"));
     PathProviderPlugin.registerWith(registry.registrarFor("io.flutter.plugins.pathprovider.PathProviderPlugin"));
     SensorsPlugin.registerWith(registry.registrarFor("io.flutter.plugins.sensors.SensorsPlugin"));
     SharedPreferencesPlugin.registerWith(registry.registrarFor("io.flutter.plugins.sharedpreferences.SharedPreferencesPlugin"));

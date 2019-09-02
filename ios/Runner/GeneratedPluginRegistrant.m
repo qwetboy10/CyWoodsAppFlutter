@@ -6,6 +6,7 @@
 #import <background_fetch/BackgroundFetchPlugin.h>
 #import <clipboard_manager/ClipboardManagerPlugin.h>
 #import <device_id/DeviceIdPlugin.h>
+#import <flutter_local_notifications/FlutterLocalNotificationsPlugin.h>
 #import <path_provider/PathProviderPlugin.h>
 #import <sensors/SensorsPlugin.h>
 #import <shared_preferences/SharedPreferencesPlugin.h>
@@ -17,6 +18,7 @@
   [BackgroundFetchPlugin registerWithRegistrar:[registry registrarForPlugin:@"BackgroundFetchPlugin"]];
   [ClipboardManagerPlugin registerWithRegistrar:[registry registrarForPlugin:@"ClipboardManagerPlugin"]];
   [DeviceIdPlugin registerWithRegistrar:[registry registrarForPlugin:@"DeviceIdPlugin"]];
+  [FlutterLocalNotificationsPlugin registerWithRegistrar:[registry registrarForPlugin:@"FlutterLocalNotificationsPlugin"]];
   [FLTPathProviderPlugin registerWithRegistrar:[registry registrarForPlugin:@"FLTPathProviderPlugin"]];
   [FLTSensorsPlugin registerWithRegistrar:[registry registrarForPlugin:@"FLTSensorsPlugin"]];
   [FLTSharedPreferencesPlugin registerWithRegistrar:[registry registrarForPlugin:@"FLTSharedPreferencesPlugin"]];
