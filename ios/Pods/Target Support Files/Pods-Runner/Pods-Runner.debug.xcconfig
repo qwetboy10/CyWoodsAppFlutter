@@ -1,0 +1,11 @@
+ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES
+FRAMEWORK_SEARCH_PATHS = $(inherited) "${PODS_CONFIGURATION_BUILD_DIR}/background_fetch" "${PODS_CONFIGURATION_BUILD_DIR}/clipboard_manager" "${PODS_CONFIGURATION_BUILD_DIR}/device_id" "${PODS_CONFIGURATION_BUILD_DIR}/path_provider" "${PODS_CONFIGURATION_BUILD_DIR}/sensors" "${PODS_CONFIGURATION_BUILD_DIR}/shared_preferences" "${PODS_CONFIGURATION_BUILD_DIR}/url_launcher" "${PODS_ROOT}/../.symlinks/flutter/ios-release" "${PODS_ROOT}/../.symlinks/plugins/background_fetch/ios"
+GCC_PREPROCESSOR_DEFINITIONS = $(inherited) COCOAPODS=1
+HEADER_SEARCH_PATHS = $(inherited) "${PODS_CONFIGURATION_BUILD_DIR}/background_fetch/background_fetch.framework/Headers" "${PODS_CONFIGURATION_BUILD_DIR}/clipboard_manager/clipboard_manager.framework/Headers" "${PODS_CONFIGURATION_BUILD_DIR}/device_id/device_id.framework/Headers" "${PODS_CONFIGURATION_BUILD_DIR}/path_provider/path_provider.framework/Headers" "${PODS_CONFIGURATION_BUILD_DIR}/sensors/sensors.framework/Headers" "${PODS_CONFIGURATION_BUILD_DIR}/shared_preferences/shared_preferences.framework/Headers" "${PODS_CONFIGURATION_BUILD_DIR}/url_launcher/url_launcher.framework/Headers"
+LD_RUNPATH_SEARCH_PATHS = $(inherited) '@executable_path/Frameworks' '@loader_path/Frameworks'
+OTHER_LDFLAGS = $(inherited) -ObjC -framework "Flutter" -framework "background_fetch" -framework "clipboard_manager" -framework "device_id" -framework "path_provider" -framework "sensors" -framework "shared_preferences" -framework "url_launcher"
+OTHER_SWIFT_FLAGS = $(inherited) -D COCOAPODS
+PODS_BUILD_DIR = ${BUILD_DIR}
+PODS_CONFIGURATION_BUILD_DIR = ${PODS_BUILD_DIR}/$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)
+PODS_PODFILE_DIR_PATH = ${SRCROOT}/.
+PODS_ROOT = ${SRCROOT}/Pods

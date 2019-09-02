@@ -1,0 +1,5 @@
+version: "Apple Swift version 5.0.1 (swiftlang-1001.0.82.4 clang-1001.0.46.5)"
+options: "e1754daecda8bbef51f7602919ebf0e0"
+build_time: [1567456844, 652140000]
+inputs:
+  "/Users/cywoods/CyWoodsAppFlutterTest/ios/Runner/AppDelegate.swift": [9223372036, 854775807]
