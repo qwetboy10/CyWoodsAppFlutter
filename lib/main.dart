@@ -1,4 +1,5 @@
 import 'package:background_fetch/background_fetch.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:device_id/device_id.dart';
 import 'package:dynamic_theme/dynamic_theme.dart';
 import 'package:flutter/cupertino.dart';
@@ -40,9 +41,9 @@ class MyApp extends StatefulWidget {
   //static const AndroidNotificationChannel channel =
   //    const AndroidNotificationChannel(
   //        id: 'Cypress Woods',
-   //       name: 'Cypress Woods App',
-   //       description: 'Grant this app the ability to show notifications',
-    //      importance: AndroidNotificationChannelImportance.HIGH);*/
+  //       name: 'Cypress Woods App',
+  //       description: 'Grant this app the ability to show notifications',
+  //      importance: AndroidNotificationChannelImportance.HIGH);*/
   MyAppState createState() {
     //LocalNotifications.createAndroidNotificationChannel(channel: channel);
     return MyAppState();
@@ -64,8 +65,19 @@ class MyAppState extends State<MyApp> {
   }
 
   Future<void> initPlatformState() async {
-    /*StateData.deviceID = await DeviceId.getID;
+    StateData.deviceID = await DeviceId.getID;
     StateData.logInfo('Device ID is ${StateData.deviceID}');
+    FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
+        new FlutterLocalNotificationsPlugin();
+// initialise the plugin. app_icon needs to be a added as a drawable resource to the Android head project
+    var initializationSettingsAndroid =
+        new AndroidInitializationSettings('app_icon');
+    var initializationSettingsIOS = new IOSInitializationSettings();
+    var initializationSettings = new InitializationSettings(
+        initializationSettingsAndroid, initializationSettingsIOS);
+    flutterLocalNotificationsPlugin.initialize(
+      initializationSettings,
+    );
     BackgroundFetch.configure(
         BackgroundFetchConfig(
             minimumFetchInterval: 15,
@@ -75,12 +87,22 @@ class MyAppState extends State<MyApp> {
       Profile prof = await Profile.getDefaultProfile();
       List<Assignment> ass = prof.updateParserChanges();
       StateData.logInfo('Notification Fetch, ${ass.length} found');
-      if (ass.length != 0)
-        LocalNotifications.createNotification(
-            title: "New Grades Found",
-            content: ass.map((Assignment a) => a.name).toList().join(', '),
-            id: 0,
-            androidSettings: AndroidSettings(channel: MyApp.channel));
+      if (true || ass.length != 0) {
+        var androidPlatformChannelSpecifics = AndroidNotificationDetails(
+            'Grades', 'Cy Woods App Grades', 'Recieve notifications of grades',
+            importance: Importance.Max,
+            priority: Priority.High,
+            ticker: 'New Grade');
+        var iOSPlatformChannelSpecifics = IOSNotificationDetails();
+        var platformChannelSpecifics = NotificationDetails(
+            androidPlatformChannelSpecifics, iOSPlatformChannelSpecifics);
+        await flutterLocalNotificationsPlugin.show(
+          0,
+          'New  Grades',
+          ass.map((Assignment a) => a.name).toList().join(', '),
+          platformChannelSpecifics,
+        );
+      }
       // IMPORTANT:  You must signal completion of your fetch task or the OS can punish your app
       // for taking too long in the background.
       BackgroundFetch.finish();
@@ -93,7 +115,7 @@ class MyAppState extends State<MyApp> {
     // If the widget was removed from the tree while the asynchronous platform
     // message was in flight, we want to discard the reply rather than calling
     // setState to update our non-existent appearance.
-    if (!mounted) return;*/
+    if (!mounted) return;
   }
 
   @override
@@ -348,16 +370,16 @@ class WidgetContainerState extends State<WidgetContainer> {
               onTap: () => Profile.deleteAll(),
             ),
             ListTile(
-              title: Text('Reset Shared Preferences'),
-              onTap: () => SharedPreferences.getInstance().then((SharedPreferences prefs) => prefs.clear())
-            ),
+                title: Text('Reset Shared Preferences'),
+                onTap: () => SharedPreferences.getInstance()
+                    .then((SharedPreferences prefs) => prefs.clear())),
             ListTile(
               title: Text('View Logs'),
               onTap: () => Navigator.of(context).push(MaterialPageRoute(
                   builder: (context) {
                     return logger_flutter.LogConsole(
                       dark: true,
-		      showCloseButton: true,
+                      showCloseButton: true,
                     );
                   },
                   fullscreenDialog: true)),

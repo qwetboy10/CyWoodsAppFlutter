@@ -1,6 +1,5 @@
 import 'main.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:local_notifications/local_notifications.dart';
 import 'faculty.dart';
 import 'package:dynamic_theme/dynamic_theme.dart';
 import 'stateData.dart';
@@ -50,11 +49,6 @@ class More extends StatelessWidget {
             child: Text('Send Notification'),
             onPressed: () {
               print('sent');
-              LocalNotifications.createNotification(
-                  title: "Test",
-                  content: "YAY",
-                  id: 0,
-                  androidSettings: AndroidSettings(channel: MyApp.channel));
             },
           )
         ],
