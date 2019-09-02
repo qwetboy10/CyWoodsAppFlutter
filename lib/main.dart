@@ -88,7 +88,7 @@ class MyAppState extends State<MyApp> {
       Profile prof = await Profile.getDefaultProfile();
       List<Assignment> ass = prof.updateParserChanges();
       StateData.logInfo('Notification Fetch, ${ass.length} found');
-      if (true || ass.length != 0) {
+      if (ass.length != 0) {
         var androidPlatformChannelSpecifics = AndroidNotificationDetails(
             '0', 'Cy Woods App Grades', 'Recieve notifications of grades',
             importance: Importance.Max,

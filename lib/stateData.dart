@@ -26,6 +26,7 @@ class StateData {
 //uses to persist lunch across going to different tabs
   static int lunch = 0;
   static int sport = 0;
+  static int gender = 0;
   //url of the server
   //static String url = 'http://dent.ml:8080/CyWoodsAppServer';
   static String url =
