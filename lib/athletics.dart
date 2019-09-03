@@ -47,7 +47,8 @@ class AthleticsState extends State<Athletics> {
                                     .fromString(sport, StateData.gender)
                                     .length ==
                                 0
-                            ? Center(child: Text('Schedules Have Not Been Released'))
+                            ? Center(
+                                child: Text('Schedules Have Not Been Released'))
                             : ListView.separated(
                                 itemCount: parser
                                     .fromString(sport, StateData.gender)
