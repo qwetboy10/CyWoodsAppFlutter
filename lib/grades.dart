@@ -53,12 +53,12 @@ class GradesState extends State<Grades> {
           Expanded(
             child: Center(
               child: RaisedButton(
-                child: Text('Add New Account'),
+                child: Text('Manage Accounts'),
                 onPressed: () {
                   Navigator.of(context)
                       .push(
                         MaterialPageRoute(
-                            builder: (context) => NotLogin(),
+                            builder: (context) => ChangeProfile(),
                             fullscreenDialog: true),
                       )
                       .then((_) => refreshProfile());

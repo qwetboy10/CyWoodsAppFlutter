@@ -53,7 +53,6 @@ class MyApp extends StatefulWidget {
 class MyAppState extends State<MyApp> {
   void initState() {
     super.initState();
-
     initPlatformState();
     Profile.getDefaultProfile().then((Profile p) {
       if (p == null) return;
@@ -282,7 +281,9 @@ class WidgetContainerState extends State<WidgetContainer> {
         .then((SharedPreferences prefsss) => prefs = prefsss);
     return Scaffold(
       appBar: AppBar(
-        title: Text(WidgetContainer.screens[currentScreen].title),
+        title: Theme.of(context).accentColor == Colors.blue[200] ?
+          Text(WidgetContainer.screens[currentScreen].title)
+        : Text(WidgetContainer.screens[currentScreen].title),
         actions: getActions(currentScreen, context),
       ),
       body: SafeArea(child: getCurrentScreen(currentScreen)),
@@ -483,7 +484,7 @@ class WidgetContainerState extends State<WidgetContainer> {
                 );
               },
             ),
-            ListTile(
+            /*ListTile(
               title: Text('Add Account'),
               onTap: () {
                 Navigator.of(context)
@@ -495,24 +496,21 @@ class WidgetContainerState extends State<WidgetContainer> {
                     .then((_) => gradesStateKey?.currentState?.refreshProfile())
                     .then((_) => Navigator.of(context).pop());
               },
-            ),
-            Profile.current != null
-                ? ListTile(
-                    title: Text('Change Account'),
-                    onTap: () {
-                      Navigator.of(context)
-                          .push(
-                            MaterialPageRoute(
-                                builder: (context) => ChangeProfile(),
-                                fullscreenDialog: true),
-                          )
-                          .then((_) =>
-                              gradesStateKey?.currentState?.refreshProfile())
-                          .then((_) => Navigator.of(context).pop());
-                    },
-                  )
-                : null,
+            ),*/
             ListTile(
+              title: Text('Manage Accounts'),
+              onTap: () {
+                Navigator.of(context)
+                    .push(
+                      MaterialPageRoute(
+                          builder: (context) => ChangeProfile(),
+                          fullscreenDialog: true),
+                    )
+                    .then((_) => gradesStateKey?.currentState?.refreshProfile())
+                    .then((_) => Navigator.of(context).pop());
+              },
+            ),
+            /*ListTile(
               title: Text('Logout'),
               onTap: () {
                 setState(() {
@@ -521,7 +519,7 @@ class WidgetContainerState extends State<WidgetContainer> {
                 });
                 Navigator.of(context).pop();
               },
-            ),
+            ),*/
             ListTile(
               title: Text('About'),
               onTap: () {
@@ -579,6 +577,7 @@ class WidgetContainerState extends State<WidgetContainer> {
 
               if (snap.data.getBool("THEME5") != null &&
                   snap.data.getBool("THEME5")) themes.add(5);
+              StateData.logInfo("Themes: ${themes}");
               return Column(
                   children: themes
                       .map((int i) => SimpleDialogOption(

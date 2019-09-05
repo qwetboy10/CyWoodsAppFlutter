@@ -49,16 +49,16 @@ class NotLoginState extends State<NotLogin> {
                   ),
                 );
               case ConnectionState.done:
-                String message;
-                if (login.data[0] != null)
+                if (login.data[0] != null) {
+                  Navigator.of(context).pop();
                   return Center(
                     child: Text(
-                      'Welcome ${login.data[0]}',
+                      'Welcome, ${login.data[0]}',
                       textScaleFactor: 1.5,
                       style: TextStyle(fontWeight: FontWeight.bold),
                     ),
                   );
-                else
+                } else
                   return Padding(
                     padding: const EdgeInsets.all(32.0),
                     child: Center(
@@ -123,15 +123,6 @@ class NotLoginState extends State<NotLogin> {
                   //hides keyboard
                   FocusScope.of(context).requestFocus(new FocusNode());
                   //called after response from server
-                  login.then((List<String> s) {
-                    if (s != null) {
-                      //leaves login screen
-                      Navigator.of(context).pop();
-                    }
-                  });
-                  /*
-                }
-                */
                 },
               ),
             ],

@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:flutter/cupertino.dart';
@@ -47,9 +48,14 @@ class Schedule extends StatefulWidget {
 
 class ScheduleState extends State<Schedule> {
   static bool manual = false;
+  Timer t;
   @override
   initState() {
     super.initState();
+  t = new Timer.periodic(Duration(seconds: 10), (_) {
+    setState(() {
+    });
+  });
   }
 
   static String schedule;

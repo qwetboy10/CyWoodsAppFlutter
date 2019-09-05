@@ -3,7 +3,13 @@ import 'package:logger/logger.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class StateData {
-  static Logger logger = Logger(filter: ProductionFilter());
+  static Logger logger = Logger(
+      filter: ProductionFilter(),
+      printer: PrettyPrinter(
+          methodCount: 0,
+          errorMethodCount: 10,
+          lineLength: 100,
+          printTime: true));
   static String deviceID;
 
   static void logError(dynamic message, {Error error, StackTrace trace}) {
@@ -18,11 +24,12 @@ class StateData {
     logger.v(message);
   }
 
-  static void unlockTheme(int theme) async
-  {
+  static void unlockTheme(int theme) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     prefs.setBool("THEME$theme", true);
+    logInfo("unlocked theme $theme");
   }
+
 //uses to persist lunch across going to different tabs
   static int lunch = 0;
   static int sport = 0;

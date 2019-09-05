@@ -62,6 +62,7 @@ class Home extends StatelessWidget {
                 child: Text('Network Error'),
               ));
             }
+            StateData.logInfo(utf8.decode(snapshot.data.bodyBytes));
             return buildHome(context, utf8.decode(snapshot.data.bodyBytes));
         }
         return null;

@@ -56,6 +56,7 @@ flutter_icons:
 flutter:
   assets:
     - assets/
+    - assets/flag.jpg
   fonts:
     - family:  Cywoodsapp
       fonts:

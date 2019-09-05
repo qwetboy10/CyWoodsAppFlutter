@@ -216,6 +216,7 @@ class GradeDetailState extends State<GradeDetail> {
         child: Column(
           children: <Widget>[
             custom.ExpansionTile(
+              initiallyExpanded: true ,
               title: Text('Overall Grade'),
               trailing: Text(widget.currentClass?.getGradeString() ?? '---'),
 

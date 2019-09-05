@@ -18,7 +18,7 @@ class Parser {
   String toString() {
     String ret =
         '${error?.toString() ?? "NO ERROR"}\n${trace?.toString() ?? "NO TRACE"}';
-      ret += '\n$rawData';
+      ret += '\nClasses: ${classes.length}';
       return ret;
   }
 
@@ -168,6 +168,8 @@ class Class {
   List<Assignment> assignmentChanges(Class old) {
     List<Assignment> n = []..addAll(assignments);
     for (Assignment a in old.assignments) if (n.contains(a)) n.remove(a);
+    StateData.logInfo(old.assignments.toString());
+    StateData.logInfo(assignments.toString());
     return n;
   }
 
@@ -179,7 +181,7 @@ class Class {
   List<double> pseudoCategoryPoints;
   List<double> pseudoCategoryTotals;
   String toString() =>
-      '$name - $grade - $teacherName - $teacherEmail - ${assignments.toString()} - ${categoryPoints.toString()} - ${categoryTotals.toString()} - ${categoryWeights.toString()}';
+      '$name - $grade - $teacherName - $teacherEmail -  ${categoryPoints.toString()} - ${categoryTotals.toString()} - ${categoryWeights.toString()}';
 
   bool modified(int category) =>
       categoryTotals[category] != pseudoCategoryTotals[category];
@@ -316,7 +318,7 @@ class Assignment {
   }
 
   String toString() =>
-      '$name - $category - $dateAssigned - $dateDue - $score - $weight - $maxScore - $extraCredit';
+      '$name - $category $score';
   String name;
   String category;
   String dateAssigned;

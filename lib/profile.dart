@@ -57,14 +57,17 @@ class Profile {
     List<Assignment> a = newParser.gradesHasChanged(parser);
     parser = newParser;
     StateData.logInfo('Parser Updated (${a.length} new classes}');
-    StateData.logVerbose(parser.toString());
+    StateData.logInfo('${a.toString()}');
     return a;
   }
 
   Future<List<Assignment>> updateData() async {
     StateData.logInfo("Grades Updated");
-    http.Response response = await http.post('${StateData.url}/Student',
-        body: {"username": getUsername(), "password": getPassword(), "id":StateData.deviceID});
+    http.Response response = await http.post('${StateData.url}/Student', body: {
+      "username": getUsername(),
+      "password": getPassword(),
+      "id": StateData.deviceID
+    });
     if (response.statusCode == 200) {
       String data = response.body;
       Map<String, dynamic> json = jsonDecode(data);
@@ -81,10 +84,15 @@ class Profile {
         this.data = data;
         List<Assignment> ass = updateParserChanges();
         Profile.save(this);
-        if(this.parser.error == null)
-        {
-          if(this.parser.classes.fold(true,(bool b, Class c) => c.grade != null && b && c.grade >= 89.5 )) StateData.unlockTheme(3);
-          if(this.parser.classes.fold(true,(bool b, Class c) => c.grade != null && b && c.grade <= 69.5 )) StateData.unlockTheme(4);
+        if (this.parser.error == null) {
+          if (this.parser.classes.fold(true,
+              (bool b, Class c) => c.grade != null && b && c.grade >= 89.5)) {
+            StateData.unlockTheme(3);
+          }
+          if (this.parser.classes.fold(true,
+              (bool b, Class c) => c.grade != null && b && c.grade <= 69.5)) {
+            StateData.unlockTheme(4);
+          }
         }
         return ass;
       }
