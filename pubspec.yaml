@@ -47,7 +47,7 @@ flutter_icons:
   android: true
   ios: true
   image_path: "assets/icon/icon.png"
-  image_path_ios: "assets/icon/icon_ios.jpg"
+  #image_path_ios: "assets/icon/icon_ios.jpg"
 
 
 # For information on the generic Dart part of this file, see the
