@@ -1,6 +1,6 @@
-# cywoods
+# CyWoodsAppFlutter
 
-A new Flutter project.
+The corresponding front-end to the the CyWoodsAppServer repo.
 
 ## Getting Started
 
