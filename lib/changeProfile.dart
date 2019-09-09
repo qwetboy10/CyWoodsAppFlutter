@@ -92,6 +92,7 @@ class ChangeProfileState extends State<ChangeProfile> {
                           Navigator.of(context).pop();
                       });
                     },
+                    onLongPress: () => showDialog(context: context, builder: (BuildContext context) => buildAreYouSureDeleteDialog(context, profiles, index))
                   );
                 },
               );
@@ -134,7 +135,35 @@ class ChangeProfileState extends State<ChangeProfile> {
           );
         });
   }
-
+Widget buildAreYouSureDeleteDialog(
+      BuildContext context, List<Profile> profiles, int index) {
+   
+          return AlertDialog(
+            title: Text('Do You Want To Delete This Profile?'),
+            actions: <Widget>[
+              FlatButton(
+                child: Text(
+                  'Yes',
+                  style: TextStyle(color: Theme.of(context).primaryColor),
+                ),
+                onPressed: () {
+                  setState(() {
+                    Profile.deleteProfile(profiles[index]);
+                  });
+                  Navigator.of(context).pop(true);
+                },
+              ),
+              FlatButton(
+                child: Text(
+                  'No',
+                  style: TextStyle(color: Theme.of(context).primaryColor),
+                ),
+                onPressed: () => Navigator.of(context).pop(false),
+              ),
+            ],
+          );
+        
+  }
   Future<bool> buildLogoutDialog(
       BuildContext context, List<Profile> profiles, int index) {
     return showDialog(
