@@ -85,14 +85,13 @@ class ChangeProfileState extends State<ChangeProfile> {
                     onTap: () {
                       (profiles[index].getUsername() ==
                                   snapshot.data?.getUsername()
-                              ? buildLogoutDialog(context, profiles, index)
+                              ? buildAreYouSureDeleteDialog(context, profiles, index)
                               : buildAreYouSureDialog(context, profiles, index))
                           .then((bool status) {
                         if (status != null && status == true)
                           Navigator.of(context).pop();
                       });
                     },
-                    onLongPress: () => showDialog(context: context, builder: (BuildContext context) => buildAreYouSureDeleteDialog(context, profiles, index))
                   );
                 },
               );
