@@ -134,10 +134,11 @@ class ChangeProfileState extends State<ChangeProfile> {
           );
         });
   }
-Widget buildAreYouSureDeleteDialog(
+Future<bool> buildAreYouSureDeleteDialog(
       BuildContext context, List<Profile> profiles, int index) {
-   
-          return AlertDialog(
+        return showDialog(
+                context: context,
+                builder: (BuildContext context) => AlertDialog(
             title: Text('Do You Want To Delete This Profile?'),
             actions: <Widget>[
               FlatButton(
@@ -160,7 +161,7 @@ Widget buildAreYouSureDeleteDialog(
                 onPressed: () => Navigator.of(context).pop(false),
               ),
             ],
-          );
+          ));
         
   }
   Future<bool> buildLogoutDialog(

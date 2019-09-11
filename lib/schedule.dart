@@ -53,11 +53,15 @@ class ScheduleState extends State<Schedule> {
   initState() {
     super.initState();
   t = new Timer.periodic(Duration(seconds: 10), (_) {
-    setState(() {
+     setState(() {
     });
   });
   }
-
+  @override
+  dispose() {
+    super.dispose();
+    t.cancel();
+  }
   static String schedule;
   static List<List<ScheduleData>> data;
   static String scheduleName = 'Regular Bell Schedule';

@@ -37,7 +37,7 @@ class StateData {
   //url of the server
   //static String url = 'http://dent.ml:8080/CyWoodsAppServer';
   static String url =
-        'http://cywoodsappserver.us-west-2.elasticbeanstalk.com'
+        'http://cywoodsappserver.us-west-2.elasticbeanstalk.com';
 //      'http://CyWoodsAppServer-env.fsa2ppmecc.us-west-2.elasticbeanstalk.com';
   //base theme
   //use this to create any more themes

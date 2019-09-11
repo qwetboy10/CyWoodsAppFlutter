@@ -168,7 +168,7 @@ class Class {
   List<Assignment> assignmentChanges(Class old) {
     List<Assignment> n = []..addAll(assignments);
     for (Assignment a in old.assignments) if (n.contains(a)) n.remove(a);
-    return n.where((Assignment a) => a.score != null);
+    return n.where((Assignment a) => a.score != null).toList();
   }
 
   List<String> categories;
