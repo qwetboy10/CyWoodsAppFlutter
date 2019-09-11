@@ -20,6 +20,7 @@ class GradesState extends State<Grades> {
     setState(() {
       profile = Profile.getDefaultProfile();
     });
+	profile.then((Profile p) => StateData.logInfo('New Profile: ${p.getUsername()}'));
   }
 
   Future<Profile> profile = Profile.getDefaultProfile();
