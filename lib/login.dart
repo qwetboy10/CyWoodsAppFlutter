@@ -49,6 +49,10 @@ class NotLoginState extends State<NotLogin> {
                   ),
                 );
               case ConnectionState.done:
+                if (login.data == null)
+                  return Center(
+                    child: Text('Unknown Error'),
+                  );
                 if (login.data[0] != null) {
                   Navigator.of(context).pop();
                   return Center(
@@ -141,39 +145,44 @@ class NotLoginState extends State<NotLogin> {
       "password": password,
       "id": StateData.deviceID
     });
-    if (response.statusCode == 200) {
-      String data = response.body;
-      Map<String, dynamic> json = jsonDecode(data);
-      if (json.containsKey('success') && json['success'] == false) {
-        //login failed
-        StateData.logError("Login Failed: $data");
-        if (json.containsKey('message'))
-          return [null, json['message']];
-        else
-          return [null, null];
-      } else {
-        //creates profile
-        Profile p = Profile.fromRemote(username, password, data);
-        Profile.save(p);
-        Profile.setDefaultProfile(p);
-        p.updateParser();
-        StateData.logInfo('Profile Created');
-        return [p.getName(), null];
-      }
-    } else {
-      StateData.logError('Login Failed: ${response.toString()}');
-      try {
+    try {
+      if (response.statusCode == 200) {
         String data = response.body;
         Map<String, dynamic> json = jsonDecode(data);
-        if (json.containsKey('message'))
-          return [null, json['message']];
-        else
+        if (json.containsKey('success') && json['success'] == false) {
+          //login failed
+          StateData.logError("Login Failed: $data");
+          if (json.containsKey('message'))
+            return [null, json['message']];
+          else
+            return [null, null];
+        } else {
+          //creates profile
+          Profile p = Profile.fromRemote(username, password, data);
+          Profile.save(p);
+          Profile.setDefaultProfile(p);
+          p.updateParser();
+          StateData.logInfo('Profile Created');
+          return [p.getName(), null];
+        }
+      } else {
+        StateData.logError('Login Failed: ${response.toString()}');
+        try {
+          String data = response.body;
+          Map<String, dynamic> json = jsonDecode(data);
+          if (json.containsKey('message'))
+            return [null, json['message']];
+          else
+            return [null, null];
+        } catch (e, t) {
+          StateData.logError('Bad Response', error: e, trace: t);
           return [null, null];
-      } catch (e, t) {
-        StateData.logError('Bad Response', error: e, trace: t);
-        return [null, null];
+        }
       }
+      //if auth returns a non null value this should also create the profile
+    } catch (e, t) {
+      StateData.logError('Login Failed', error: e, trace: t);
+      return [null,null];
     }
-    //if auth returns a non null value this should also create the profile
   }
 }

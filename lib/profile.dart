@@ -11,15 +11,18 @@ import 'stateData.dart';
 class Profile {
   Parser parser;
   String data;
+  List<Assignment> newAssignments = [];
   Profile.fromRemote(String username, String password, String inputData) {
     Map<String, dynamic> json = jsonDecode(inputData);
     json.putIfAbsent('username', () => username);
     json.putIfAbsent('password', () => password);
     json.putIfAbsent('lastUpdated', () => DateTime.now().toIso8601String());
     data = jsonEncode(json);
+    newAssignments = [];
     updateParser();
   }
   Profile.fromLocal(this.data) {
+    if(newAssignments == null) newAssignments = [];
     updateParser();
   }
 
@@ -46,9 +49,12 @@ class Profile {
   }
 
   void updateParser() {
+    Parser old = parser;
     parser = Parser(data);
+    newAssignments.addAll(parser.gradesHasChanged(old));
     this.saveSnapshot();
     StateData.logInfo('Parser Updated');
+    StateData.logVerbose('New Assignments: ${newAssignments.toString()}');
     StateData.logVerbose(parser.toString());
   }
 
@@ -82,6 +88,7 @@ class Profile {
         json.putIfAbsent('lastUpdated', () => DateTime.now().toIso8601String());
         data = jsonEncode(json);
         this.data = data;
+        newAssignments = [];
         List<Assignment> ass = updateParserChanges();
         Profile.save(this);
         if (this.parser.error == null) {

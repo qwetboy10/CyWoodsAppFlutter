@@ -187,6 +187,7 @@ class GradesState extends State<Grades> {
                   MaterialPageRoute(
                       builder: (context) => GradeDetail(
                             currentClass: profile.parser.classes[index - 1],
+                            profile: profile,
                           ),
                       fullscreenDialog: true),
                 )
