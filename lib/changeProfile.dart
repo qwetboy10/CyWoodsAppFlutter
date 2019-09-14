@@ -136,9 +136,15 @@ class ChangeProfileState extends State<ChangeProfile> {
   }
 Future<bool> buildAreYouSureDeleteDialog(
       BuildContext context, List<Profile> profiles, int index) {
+<<<<<<< HEAD
+	return showDialog(
+context: context,
+builder: (BuildContext context) => AlertDialog(
+=======
         return showDialog(
                 context: context,
                 builder: (BuildContext context) => AlertDialog(
+>>>>>>> c233bb7459fe210d5e85773a3c75fc860d5baf20
             title: Text('Do You Want To Delete This Profile?'),
             actions: <Widget>[
               FlatButton(

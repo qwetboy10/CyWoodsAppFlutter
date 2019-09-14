@@ -62,7 +62,7 @@ class Home extends StatelessWidget {
                 child: Text('Network Error'),
               ));
             }
-            StateData.logInfo(utf8.decode(snapshot.data.bodyBytes));
+            StateData.logVerbose('Home data: ${utf8.decode(snapshot.data.bodyBytes)}');
             return buildHome(context, utf8.decode(snapshot.data.bodyBytes));
         }
         return null;
@@ -82,6 +82,7 @@ class Home extends StatelessWidget {
   }
   void loadJSON(String data)
   {
+try{
     Map<String, dynamic> root = jsonDecode(data);
     List<dynamic> n = root['news'];
     List<dynamic> e = root['events'];
@@ -89,6 +90,11 @@ class Home extends StatelessWidget {
     news.addAll( n.map((dynamic d) => NewsItem.fromMap(d)).toList());
     events.clear();
     events.addAll(e.map((dynamic d) => Event(d)).toList());
+}
+catch(e,t)
+{
+StateData.logError('Home Error');
+}
   }
   Column buildHome(BuildContext context, String data) {
     loadJSON(data);
