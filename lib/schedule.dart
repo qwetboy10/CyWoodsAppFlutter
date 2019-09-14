@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'stateData.dart';
 import 'package:intl/intl.dart';
 
@@ -47,11 +48,21 @@ class Schedule extends StatefulWidget {
 }
 
 class ScheduleState extends State<Schedule> {
+  SharedPreferences prefs;
   static bool manual = false;
+  bool seconds = false;
   Timer t;
   @override
   initState() {
     super.initState();
+    SharedPreferences.getInstance().then((SharedPreferences p)
+    {
+      setState(() {
+        
+      seconds = p.getBool("SECONDS");
+      StateData.lunch = p.getInt("DEFAULTLUNCH");
+      });
+    });
   t = new Timer.periodic(Duration(seconds: 10), (_) {
      setState(() {
     });
@@ -385,7 +396,7 @@ class ScheduleState extends State<Schedule> {
           subtitle: Text(
             data.timeString() +
                 (data.current()
-                    ? ' (${data.end.difference(DateTime.now()).inMinutes.toString()} Minute${data.end.difference(DateTime.now()).inMinutes != 1 ? 's' : ''} Remaining)'
+                    ? ' (${data.end.difference(DateTime.now()).inMinutes.toString()} Minute${data.end.difference(DateTime.now()).inMinutes != 1 ? 's' : ''} ${seconds && secondsRemaining(data.end) < 60?"And "+secondsRemaining(data.end).toString() + " seconds":""} Remaining)'
                     : ""),
           ),
         ),
@@ -393,4 +404,5 @@ class ScheduleState extends State<Schedule> {
             ? BoxDecoration(color: Theme.of(context).colorScheme.secondary)
             : BoxDecoration(color: Theme.of(context).colorScheme.surface));
   }
+  int secondsRemaining(DateTime end) => end.difference(DateTime.now()).inSeconds;
 }
