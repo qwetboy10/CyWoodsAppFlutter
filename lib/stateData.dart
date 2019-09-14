@@ -172,6 +172,29 @@ class StateData {
     accentColor: Colors.blue[200],
     backgroundColor: Colors.grey[200],
   );
+  
+  static ThemeData deepTheme = ThemeData(
+      colorScheme: ColorScheme(
+          brightness: Brightness.dark,
+          primary: Colors.blue,
+          primaryVariant: Colors.blue[700],
+          secondary: Colors.grey[900],
+          secondaryVariant: Colors.grey[900],
+          background: Colors.black,
+          surface: Colors.black,
+          error: Colors.red,
+          onPrimary: Colors.white,
+          onSecondary: Colors.black,
+          onBackground: Colors.black,
+          onSurface: Colors.blue,
+          onError: Colors.white),
+      primaryColor: Colors.blue,
+      accentColor: Colors.blueAccent[700],
+      backgroundColor: Colors.black,
+      buttonColor: Colors.blue,
+      brightness: Brightness.dark,
+      textTheme: Typography.whiteCupertino
+          .apply(bodyColor: Colors.blue, displayColor: Colors.blue));
 
   static ThemeData getThemeByIndex(int i) {
     switch (i) {
@@ -187,6 +210,8 @@ class StateData {
         return eyePainTheme;
       case 5:
         return patriotTheme;
+      case 6:
+        return deepTheme;
     }
     return null;
   }
@@ -205,6 +230,8 @@ class StateData {
         return "Eye Pain";
       case 5:
         return "Patriot Theme";
+      case 6:
+        return "Deep Theme";
     }
     return "";
   }
