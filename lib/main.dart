@@ -644,6 +644,9 @@ class WidgetContainerState extends State<WidgetContainer> {
 
               if (snap.data.getBool("THEME5") != null &&
                   snap.data.getBool("THEME5")) themes.add(5);
+              
+              if (snap.data.getBool("THEME6") != null && 
+                  snap.data.getBool("THEME6")) themes.add(6);
               StateData.logInfo("Themes: ${themes}");
               return Column(
                   children: themes
