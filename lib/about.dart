@@ -92,6 +92,7 @@ class AboutState extends State<About> {
                                           prefs.setBool("THEME3", true);
                                           prefs.setBool("THEME4", true);
                                           prefs.setBool("THEME5", true);
+                                          prefs.setBool("THEME6", true);
                                         });
                                       }
                                       Navigator.of(context).pop();
