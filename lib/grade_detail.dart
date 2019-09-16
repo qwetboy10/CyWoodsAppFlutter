@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'grades.dart';
 import 'customExpansionTile.dart' as custom;
 import 'parser.dart';
+import 'cywoodsapp_icons.dart';
 
 class PseudoDialog extends StatefulWidget {
   final Class clas;
@@ -276,15 +277,21 @@ class GradeDetailState extends State<GradeDetail> {
                   Assignment current;
                   if (index < widget.currentClass.pseudoAssignments.length)
                     current = widget.currentClass.pseudoAssignments[index];
-                  else
-                  {
-                    widget.currentClass.assignments.sort((Assignment a, Assignment b) => widget.profile.newAssignments.contains(a) ? -1 : widget.profile.newAssignments.contains(b) ? 1 : 0);
+                  else {
+                    widget.currentClass.assignments.sort(
+                        (Assignment a, Assignment b) =>
+                            widget.profile.newAssignments.contains(a)
+                                ? -1
+                                : widget.profile.newAssignments.contains(b)
+                                    ? 1
+                                    : 0);
                     current = widget.currentClass.assignments[
-                        index - widget.currentClass.pseudoAssignments.length];}
+                        index - widget.currentClass.pseudoAssignments.length];
+                  }
                   return Container(
                     decoration: BoxDecoration(
-                        gradient: GradesState.getGradientString(
-                            context, current.score,
+                        gradient: GradesState.getGradientAssignment(
+                            context, current,
                             pseudo: current.psuedo)),
                     child: ListTile(
                       title: Text(current.name),
@@ -296,22 +303,20 @@ class GradeDetailState extends State<GradeDetail> {
                               icon: Icon(Icons.close),
                               iconSize: 12,
                               onPressed: () {
-                                if (current.psuedo) {
-                                  setState(() {
-                                    widget.currentClass
-                                        .removePseudoAssignment(current.name);
-                                  });
-                                } else {
-                                  showDialog(
-                                      context: context,
-                                      builder: (BuildContext context) =>
-                                          buildGradeDialog(context, current));
-                                }
+                                setState(() {
+                                  widget.currentClass
+                                      .removePseudoAssignment(current.name);
+                                });
                               },
                             )
                           : widget.profile.newAssignments.contains(current)
-                              ? Icon(Icons.new_releases)
-                              : null,
+                              ? Icon(Cywoodsapp.circle, color: Theme.of(context).primaryColor,): null,
+                      onTap: () {
+                        showDialog(
+                            context: context,
+                            builder: (BuildContext context) =>
+                                buildGradeDialog(context, current));
+                      },
                     ),
                   );
                 },

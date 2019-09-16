@@ -77,12 +77,14 @@ class FinalCalculatorState extends State<FinalCalculator> {
                           " Quarter 2 ",
                           "   Final   ",
                           "Final Grade"
-                        ].map((String s) => Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Text(s),
-                        )).toList(),
+                        ]
+                            .map((String s) => Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Text(s),
+                                ))
+                            .toList(),
                       )
-                    : buildFinalWidget(context, index-1, classes[index-1]),
+                    : buildFinalWidget(context, index - 1, classes[index - 1]),
                 itemCount: classes.length + 1,
               ),
       );
@@ -124,7 +126,7 @@ class FinalCalculatorState extends State<FinalCalculator> {
               try {
                 hint = List.generate(20, (int i) => List.filled(4, null));
                 setState(() {
-                  getMissing(i);
+                  getMissing(i, context);
                 });
               } catch (e) {}
             },
@@ -133,13 +135,21 @@ class FinalCalculatorState extends State<FinalCalculator> {
       );
 //sphaghetti incoming
 //fills in thr hint text of whichever of the 4 fields is missing a number
-  static void getMissing(int i) {
+  static void getMissing(int i, BuildContext context) {
     List<double> grades = controllers[i]
         .map((TextEditingController edit) =>
             edit.text == null || edit.text.length == 0
                 ? null
                 : double.parse(edit.text))
         .toList();
+    try {
+      if (grades[0] == 2.0 && grades[1] == 1.0 && grades[2] == 2.0) {
+        StateData.unlockTheme(6);
+        Scaffold.of(context).showSnackBar(SnackBar(
+          content: Text('New Theme Unlocked'),
+        ));
+      }
+    } catch (e, t) {}
     if (grades.where((double d) => d == null).toList().length != 1)
       throw ErrorDescription(
           'getMissing called with an amount of nulls other than 1');

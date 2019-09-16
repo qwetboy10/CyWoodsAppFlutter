@@ -120,7 +120,7 @@ class NotLoginState extends State<NotLogin> {
               ),
               Container(height: 8.0),
               RaisedButton(
-                child: Text('Login'),
+                child: Center(child: Text('Login')),
                 onPressed: () {
                   login = authenticate(
                       usernameController.text, passwordController.text);

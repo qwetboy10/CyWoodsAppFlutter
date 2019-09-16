@@ -59,8 +59,8 @@ class ScheduleState extends State<Schedule> {
     {
       setState(() {
         
-      seconds = p.getBool("SECONDS");
-      StateData.lunch = p.getInt("DEFAULTLUNCH");
+      seconds = p.getBool("SECONDS") ?? false;
+      StateData.lunch = p.getInt("DEFAULTLUNCH") ?? 0;
       });
     });
   t = new Timer.periodic(Duration(seconds: 10), (_) {

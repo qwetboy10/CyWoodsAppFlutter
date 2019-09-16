@@ -558,6 +558,7 @@ class WidgetContainerState extends State<WidgetContainer> {
                 ListTile(
                   title: Text('Show seconds on schedule?'),
                   trailing: Switch(
+                    activeColor: Theme.of(context).accentColor,
                     value: seconds,
                     onChanged: (bool b) {
                       setState(() {
@@ -599,6 +600,7 @@ class WidgetContainerState extends State<WidgetContainer> {
                     ],
                   ),
                 ),
+
               ],
             )
           ].where((dynamic d) => d != null).toList(),

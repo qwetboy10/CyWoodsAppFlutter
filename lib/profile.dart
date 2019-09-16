@@ -56,14 +56,17 @@ class Profile {
     StateData.logInfo('Parser Updated');
     StateData.logVerbose('New Assignments: ${newAssignments.toString()}');
     StateData.logVerbose(parser.toString());
+    StateData.logInfo(newAssignments.toString());
   }
 
   List<Assignment> updateParserChanges() {
     Parser newParser = Parser(data);
     List<Assignment> a = newParser.gradesHasChanged(parser);
+    newAssignments.addAll(a);
     parser = newParser;
     StateData.logInfo('Parser Updated (${a.length} new classes}');
     StateData.logInfo('${a.toString()}');
+    StateData.logInfo('new assignments: ${newAssignments.toString()}');
     return a;
   }
 
