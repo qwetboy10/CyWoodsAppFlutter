@@ -20,6 +20,7 @@ class FinalCalculatorState extends State<FinalCalculator> {
   Widget build(BuildContext context) {
     profile.then((Profile p) => p == null ? null : p.updateParser());
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       appBar: AppBar(
         title: Text('Final Calculator'),
       ),
