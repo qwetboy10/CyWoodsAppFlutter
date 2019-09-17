@@ -1,4 +1,5 @@
 import 'package:CyWoodsAppFlutter/profile.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:flutter/material.dart';
 import 'grades.dart';
 import 'customExpansionTile.dart' as custom;
@@ -294,7 +295,19 @@ class GradeDetailState extends State<GradeDetail> {
                             context, current,
                             pseudo: current.psuedo)),
                     child: ListTile(
-                      title: Text(current.name),
+                      title: widget.profile.newAssignments.contains(current)
+                          ? Row(children: [
+                              Text(current.name),
+                              Container(
+                                padding: EdgeInsets.all(8),
+                                child: Icon(
+                                  FontAwesomeIcons.solidCircle,
+                                  size: 8,
+                                  color: Theme.of(context).primaryColor,
+                                ),
+                              ),
+                            ])
+                          : Text(current.name),
                       subtitle: Text(
                           '${current.category}${current.psuedo ? " (Fake Grade)" : ""}'),
                       trailing: Text(current.score),
@@ -309,8 +322,7 @@ class GradeDetailState extends State<GradeDetail> {
                                 });
                               },
                             )
-                          : widget.profile.newAssignments.contains(current)
-                              ? Icon(Cywoodsapp.circle, color: Theme.of(context).primaryColor,): null,
+                          : null,
                       onTap: () {
                         showDialog(
                             context: context,

@@ -37,6 +37,7 @@ dependencies:
   logger: any
   logger_flutter: any
   device_id: ^0.2.0
+  font_awesome_flutter: ^8.5.0
   
 dev_dependencies:
   flutter_test:
@@ -62,7 +63,6 @@ flutter:
     - family:  Cywoodsapp
       fonts:
         - asset: fonts/Cywoodsapp.ttf
-        - asset: fonts/Cywoodsapp2.ttf
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in
   # the material Icons class.

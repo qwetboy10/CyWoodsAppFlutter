@@ -1,4 +1,5 @@
 import 'package:flutter/cupertino.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'stateData.dart';
 import 'changeProfile.dart';
@@ -185,10 +186,6 @@ class GradesState extends State<Grades> {
     try {
       return Container(
         child: ListTile(
-          leading: profile.parser.classes[index - 1].assignments
-                  .any((Assignment a) => profile.newAssignments.contains(a))
-              ? Icon(Cywoodsapp.circle, color: Theme.of(context).primaryColor,)
-              : null,
           onTap: () {
             Navigator.of(context)
                 .push(
@@ -201,17 +198,31 @@ class GradesState extends State<Grades> {
             )
                 .then((_) {
               setState(() {
-                profile.newAssignments = profile.newAssignments.where(
-                    (Assignment a) => !profile
+                profile.newAssignments = profile.newAssignments
+                    .where((Assignment a) => !profile
                         .parser.classes[index - 1].assignments
-                        .contains(a)).toList();
+                        .contains(a))
+                    .toList();
                 StateData.logInfo(profile.newAssignments.toString());
                 profile.parser.classes
                     .forEach((Class c) => c.removeAllPseudoAssignments());
               });
             });
           },
-          title: Text(profile.parser.classes[index - 1].name),
+          title: profile.parser.classes[index - 1].assignments
+                  .any((Assignment a) => profile.newAssignments.contains(a))
+              ? Row(children: [
+                  Text(profile.parser.classes[index - 1].name),
+                  Container(
+                    padding: EdgeInsets.all(8),
+                    child: Icon(
+                      FontAwesomeIcons.solidCircle,
+                      size: 8,
+                      color: Theme.of(context).primaryColor,
+                    ),
+                  ),
+                ])
+              : Text(profile.parser.classes[index - 1].name),
           trailing: Text(profile.parser.classes[index - 1].getGradeString()),
         ),
         decoration: BoxDecoration(
@@ -226,10 +237,18 @@ class GradesState extends State<Grades> {
     }
   }
 
-  static LinearGradient getGradientAssignment(BuildContext context, Assignment a,
+  static LinearGradient getGradientAssignment(
+      BuildContext context, Assignment a,
       {bool pseudo = false}) {
-      if(a.extraCredit ?? false) return getGradient(context, 100, pseudo: pseudo);
-      else return getGradient(context,a.maxScore == null || a.score == null ? double.tryParse(a.score) : double.parse(a.score) / a.maxScore * 100, pseudo: pseudo);
+    if (a.extraCredit ?? false)
+      return getGradient(context, 100, pseudo: pseudo);
+    else
+      return getGradient(
+          context,
+          a.maxScore == null || a.score == null
+              ? double.tryParse(a.score)
+              : double.parse(a.score) / a.maxScore * 100,
+          pseudo: pseudo);
   }
 
   static LinearGradient getGradient(BuildContext context, double grade,

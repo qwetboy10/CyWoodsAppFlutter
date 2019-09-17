@@ -25,5 +25,5 @@ class Cywoodsapp {
   static const _kFontFam = 'Cywoodsapp';
 
   static const IconData american_football_ball = const IconData(0xe800, fontFamily: _kFontFam);
-  static const IconData circle = const IconData(0xf111, fontFamily: _kFontFam);
+  //static const IconData circle = const IconData(0xf111, fontFamily: _kFontFam);
 }
