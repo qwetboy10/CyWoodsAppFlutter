@@ -1,7 +1,9 @@
+import 'package:CyWoodsAppFlutter/profile.dart';
 import 'package:flutter/material.dart';
 import 'grades.dart';
 import 'customExpansionTile.dart' as custom;
 import 'parser.dart';
+import 'cywoodsapp_icons.dart';
 
 class PseudoDialog extends StatefulWidget {
   final Class clas;
@@ -120,8 +122,9 @@ class PseudoDialogState extends State<PseudoDialog> {
 
 class GradeDetail extends StatefulWidget {
   final Class currentClass;
+  final Profile profile;
 
-  GradeDetail({this.currentClass});
+  GradeDetail({this.currentClass, this.profile});
   GradeDetailState createState() => GradeDetailState();
 }
 
@@ -189,7 +192,8 @@ class GradeDetailState extends State<GradeDetail> {
                   if (vals.any((String s) => s == null || s.length == 0))
                     return;
                   double grade = double.tryParse(vals[1]) ??
-                      int.tryParse(vals[1])?.toDouble();
+                      int.tryParse(vals[1])?.toDouble() ??
+                      -1;
                   if (grade == null) return;
                   setState(() {
                     widget.currentClass
@@ -216,7 +220,7 @@ class GradeDetailState extends State<GradeDetail> {
         child: Column(
           children: <Widget>[
             custom.ExpansionTile(
-              initiallyExpanded: true ,
+              initiallyExpanded: true,
               title: Text('Overall Grade'),
               trailing: Text(widget.currentClass?.getGradeString() ?? '---'),
 
@@ -237,7 +241,7 @@ class GradeDetailState extends State<GradeDetail> {
                                 : Theme.of(context).colorScheme.surface,
                         title: Text(
                           widget.currentClass.categoryWeights[index] == null
-                              ? 'No Grade Found For This Category'
+                              ? '$name'
                               : '$name (${(widget.currentClass.categoryWeights[index] * 100).toStringAsFixed(0)}%)',
                         ),
                         trailing: Text(
@@ -248,7 +252,10 @@ class GradeDetailState extends State<GradeDetail> {
                             padding: EdgeInsets.only(left: 8, bottom: 8),
                             alignment: Alignment.centerLeft,
                             decoration: BoxDecoration(
-                                color: Theme.of(context).colorScheme.surface),
+                              color: widget.currentClass.modified(index)
+                                  ? Theme.of(context).colorScheme.secondary
+                                  : Theme.of(context).colorScheme.surface,
+                            ),
                             width: double.infinity,
                             child: Text(
                               widget.currentClass.gradeToKeep(index).toString(),
@@ -270,13 +277,21 @@ class GradeDetailState extends State<GradeDetail> {
                   Assignment current;
                   if (index < widget.currentClass.pseudoAssignments.length)
                     current = widget.currentClass.pseudoAssignments[index];
-                  else
+                  else {
+                    widget.currentClass.assignments.sort(
+                        (Assignment a, Assignment b) =>
+                            widget.profile.newAssignments.contains(a)
+                                ? -1
+                                : widget.profile.newAssignments.contains(b)
+                                    ? 1
+                                    : 0);
                     current = widget.currentClass.assignments[
                         index - widget.currentClass.pseudoAssignments.length];
+                  }
                   return Container(
                     decoration: BoxDecoration(
-                        gradient: GradesState.getGradientString(
-                            context, current.score,
+                        gradient: GradesState.getGradientAssignment(
+                            context, current,
                             pseudo: current.psuedo)),
                     child: ListTile(
                       title: Text(current.name),
@@ -288,20 +303,20 @@ class GradeDetailState extends State<GradeDetail> {
                               icon: Icon(Icons.close),
                               iconSize: 12,
                               onPressed: () {
-                                if (current.psuedo) {
-                                  setState(() {
-                                    widget.currentClass
-                                        .removePseudoAssignment(current.name);
-                                  });
-                                } else {
-                                  showDialog(
-                                      context: context,
-                                      builder: (BuildContext context) =>
-                                          buildGradeDialog(context, current));
-                                }
+                                setState(() {
+                                  widget.currentClass
+                                      .removePseudoAssignment(current.name);
+                                });
                               },
                             )
-                          : null,
+                          : widget.profile.newAssignments.contains(current)
+                              ? Icon(Cywoodsapp.circle, color: Theme.of(context).primaryColor,): null,
+                      onTap: () {
+                        showDialog(
+                            context: context,
+                            builder: (BuildContext context) =>
+                                buildGradeDialog(context, current));
+                      },
                     ),
                   );
                 },

@@ -25,6 +25,7 @@ import 'profile.dart';
 import 'schedule.dart';
 import 'stateData.dart';
 import 'transcript.dart';
+import 'customExpansionTile.dart' as custom;
 
 void main() {
   SystemChrome.setPreferredOrientations(
@@ -120,25 +121,50 @@ class MyAppState extends State<MyApp> {
 
   @override
   Widget build(BuildContext context) {
-    return buildMainApp();
+    return MaterialApp(
+      theme: StateData.defaultTheme,
+      home: Scaffold(
+        body: FutureBuilder(
+          future: SharedPreferences.getInstance(),
+          builder: (BuildContext context, AsyncSnapshot snap) {
+            switch (snap.connectionState) {
+              case ConnectionState.active:
+              case ConnectionState.none:
+              case ConnectionState.waiting:
+                return CircularProgressIndicator(
+                  valueColor: AlwaysStoppedAnimation<Color>(
+                      Theme.of(context).primaryColor),
+                );
+              case ConnectionState.done:
+                return buildMainApp(snap.data);
+            }
+          },
+        ),
+      ),
+    );
   }
 
-  DynamicTheme buildMainApp() {
+  DynamicTheme buildMainApp(SharedPreferences prefs) {
     return DynamicTheme(
         defaultBrightness: Brightness.light,
-        data: (brightness) => StateData.defaultTheme,
+        data: (brightness) =>
+            StateData.getThemeByIndex(prefs.getInt("DEFAULTTHEME") ?? 0),
         themedWidgetBuilder: (BuildContext context, ThemeData theme) =>
             theme.brightness == Brightness.light
                 ? CustomTheme(
                     child: MaterialApp(
                     title: 'Home',
-                    home: WidgetContainer(),
+                    home: WidgetContainer(
+                      prefs: prefs,
+                    ),
                     theme: theme,
                   ))
                 : CustomThemeDark(
                     child: MaterialApp(
                     title: 'Home',
-                    home: WidgetContainer(),
+                    home: WidgetContainer(
+                      prefs: prefs,
+                    ),
                     theme: theme,
                   )));
   }
@@ -189,7 +215,8 @@ class Screen {
 //Widget Container defines the titlebar and the bottom navigation bar.
 //It also controls which of the screens is displayed
 class WidgetContainer extends StatefulWidget {
-  WidgetContainer({Key key}) : super(key: key);
+  final SharedPreferences prefs;
+  WidgetContainer({Key key, this.prefs}) : super(key: key);
   //static list of all the screens displayed on the bottom navigation bar
   static List<Screen> screens = [
     Screen('Home', Home(), Icons.home),
@@ -200,10 +227,16 @@ class WidgetContainer extends StatefulWidget {
   ];
 
   @override
-  WidgetContainerState createState() => WidgetContainerState();
+  WidgetContainerState createState() => WidgetContainerState(prefs);
 }
 
 class WidgetContainerState extends State<WidgetContainer> {
+  bool seconds;
+  int lunch;
+  WidgetContainerState(SharedPreferences prefs) {
+    seconds = prefs.getBool("SECONDS") ?? false;
+   lunch = prefs.getInt("DEFAULTLUNCH");
+  }
   SharedPreferences prefs;
   int currentScreen = 0;
   final GlobalKey<ScheduleState> scheduleStateKey = GlobalKey<ScheduleState>();
@@ -281,9 +314,9 @@ class WidgetContainerState extends State<WidgetContainer> {
         .then((SharedPreferences prefsss) => prefs = prefsss);
     return Scaffold(
       appBar: AppBar(
-        title: Theme.of(context).accentColor == Colors.blue[200] ?
-          Text(WidgetContainer.screens[currentScreen].title)
-        : Text(WidgetContainer.screens[currentScreen].title),
+        title: Theme.of(context).accentColor == Colors.blue[200]
+            ? Text(WidgetContainer.screens[currentScreen].title)
+            : Text(WidgetContainer.screens[currentScreen].title),
         actions: getActions(currentScreen, context),
       ),
       body: SafeArea(child: getCurrentScreen(currentScreen)),
@@ -484,19 +517,6 @@ class WidgetContainerState extends State<WidgetContainer> {
                 );
               },
             ),
-            /*ListTile(
-              title: Text('Add Account'),
-              onTap: () {
-                Navigator.of(context)
-                    .push(
-                      MaterialPageRoute(
-                          builder: (context) => NotLogin(),
-                          fullscreenDialog: true),
-                    )
-                    .then((_) => gradesStateKey?.currentState?.refreshProfile())
-                    .then((_) => Navigator.of(context).pop());
-              },
-            ),*/
             ListTile(
               title: Text('Manage Accounts'),
               onTap: () {
@@ -510,16 +530,6 @@ class WidgetContainerState extends State<WidgetContainer> {
                     .then((_) => Navigator.of(context).pop());
               },
             ),
-            /*ListTile(
-              title: Text('Logout'),
-              onTap: () {
-                setState(() {
-                  Profile.setDefaultProfile(null);
-                  gradesStateKey?.currentState?.refreshProfile();
-                });
-                Navigator.of(context).pop();
-              },
-            ),*/
             ListTile(
               title: Text('About'),
               onTap: () {
@@ -531,16 +541,75 @@ class WidgetContainerState extends State<WidgetContainer> {
             ),
             ListTile(
               title: Text('Change Theme'),
-              onTap: () => showDialog<ThemeData>(
+              onTap: () => showDialog<int>(
                 context: context,
                 builder: chooseThemeDialog,
-              ).then((ThemeData data) {
-                if (data != null) DynamicTheme.of(context).setThemeData(data);
+              ).then((int data) {
+                if (data != null) {
+                  DynamicTheme.of(context)
+                      .setThemeData(StateData.getThemeByIndex(data));
+                  prefs.setInt("DEFAULTTHEME", data);
+                }
               }),
             ),
+            ExpansionTile(
+              title: Text('More Settings'),
+              children: <Widget>[
+                ListTile(
+                  title: Text('Show seconds on schedule?'),
+                  trailing: Switch(
+                    activeColor: Theme.of(context).accentColor,
+                    value: seconds,
+                    onChanged: (bool b) {
+                      setState(() {
+                        seconds = b;
+                      });
+                      prefs.setBool("SECONDS", seconds);
+                    },
+                  ),
+                ),
+                Container(
+                  padding: EdgeInsets.all(16),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: <Widget>[
+                      Text('Default Lunch'),
+                      DropdownButton(
+                        value: lunch,
+                        items: [
+                          DropdownMenuItem(
+                            child: Text('A'),
+                            value: 0,
+                          ),
+                          DropdownMenuItem(
+                            child: Text('B'),
+                            value: 1,
+                          ),
+                          DropdownMenuItem(
+                            child: Text('C'),
+                            value: 2,
+                          ),
+                        ],
+                        onChanged: (int i) {
+                          setState(() {
+                            changeDefaultLunch(i);
+                            lunch = i;
+                          });
+                        },
+                      ),
+                    ],
+                  ),
+                ),
+
+              ],
+            )
           ].where((dynamic d) => d != null).toList(),
         ),
       );
+  }
+
+  void changeDefaultLunch(int i) {
+    prefs.setInt("DEFAULTLUNCH", i);
   }
 
   Widget chooseThemeDialog(BuildContext context) => SimpleDialog(
@@ -577,13 +646,15 @@ class WidgetContainerState extends State<WidgetContainer> {
 
               if (snap.data.getBool("THEME5") != null &&
                   snap.data.getBool("THEME5")) themes.add(5);
+              
+              if (snap.data.getBool("THEME6") != null && 
+                  snap.data.getBool("THEME6")) themes.add(6);
               StateData.logInfo("Themes: ${themes}");
               return Column(
                   children: themes
                       .map((int i) => SimpleDialogOption(
                             child: Text(StateData.getThemeName(i)),
-                            onPressed: () => Navigator.of(context)
-                                .pop(StateData.getThemeByIndex(i)),
+                            onPressed: () => Navigator.of(context).pop(i),
                           ))
                       .toList());
           }

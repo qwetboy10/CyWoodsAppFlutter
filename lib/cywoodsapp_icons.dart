@@ -12,6 +12,10 @@
 ///       - asset: fonts/Cywoodsapp.ttf
 ///
 /// 
+/// * Font Awesome, Copyright (C) 2016 by Dave Gandy
+///         Author:    Dave Gandy
+///         License:   SIL ()
+///         Homepage:  http://fortawesome.github.com/Font-Awesome/
 ///
 import 'package:flutter/widgets.dart';
 
@@ -21,4 +25,5 @@ class Cywoodsapp {
   static const _kFontFam = 'Cywoodsapp';
 
   static const IconData american_football_ball = const IconData(0xe800, fontFamily: _kFontFam);
+  static const IconData circle = const IconData(0xf111, fontFamily: _kFontFam);
 }

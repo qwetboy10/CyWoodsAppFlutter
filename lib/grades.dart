@@ -9,6 +9,7 @@ import 'package:flutter/widgets.dart';
 import 'profile.dart';
 import 'parser.dart';
 import 'login.dart';
+import 'cywoodsapp_icons.dart';
 
 class Grades extends StatefulWidget {
   Grades({Key key}) : super(key: key);
@@ -20,7 +21,8 @@ class GradesState extends State<Grades> {
     setState(() {
       profile = Profile.getDefaultProfile();
     });
-	profile.then((Profile p) => StateData.logInfo('New Profile: ${p.getUsername()}'));
+    profile.then(
+        (Profile p) => StateData.logInfo('New Profile: ${p.getUsername()}'));
   }
 
   Future<Profile> profile = Profile.getDefaultProfile();
@@ -178,21 +180,36 @@ class GradesState extends State<Grades> {
       ),
     );
   }
+
   Widget buildGradeTile(BuildContext context, Profile profile, int index) {
     try {
       return Container(
         child: ListTile(
+          leading: profile.parser.classes[index - 1].assignments
+                  .any((Assignment a) => profile.newAssignments.contains(a))
+              ? Icon(Cywoodsapp.circle, color: Theme.of(context).primaryColor,)
+              : null,
           onTap: () {
             Navigator.of(context)
                 .push(
-                  MaterialPageRoute(
-                      builder: (context) => GradeDetail(
-                            currentClass: profile.parser.classes[index - 1],
-                          ),
-                      fullscreenDialog: true),
-                )
-                .then((_) => profile.parser.classes
-                    .forEach((Class c) => c.removeAllPseudoAssignments()));
+              MaterialPageRoute(
+                  builder: (context) => GradeDetail(
+                        currentClass: profile.parser.classes[index - 1],
+                        profile: profile,
+                      ),
+                  fullscreenDialog: true),
+            )
+                .then((_) {
+              setState(() {
+                profile.newAssignments = profile.newAssignments.where(
+                    (Assignment a) => !profile
+                        .parser.classes[index - 1].assignments
+                        .contains(a)).toList();
+                StateData.logInfo(profile.newAssignments.toString());
+                profile.parser.classes
+                    .forEach((Class c) => c.removeAllPseudoAssignments());
+              });
+            });
           },
           title: Text(profile.parser.classes[index - 1].name),
           trailing: Text(profile.parser.classes[index - 1].getGradeString()),
@@ -209,13 +226,10 @@ class GradesState extends State<Grades> {
     }
   }
 
-  static LinearGradient getGradientString(BuildContext context, String grade,
+  static LinearGradient getGradientAssignment(BuildContext context, Assignment a,
       {bool pseudo = false}) {
-    try {
-      return getGradient(context, double.parse(grade), pseudo: pseudo);
-    } catch (e) {
-      return getGradient(context, null);
-    }
+      if(a.extraCredit ?? false) return getGradient(context, 100, pseudo: pseudo);
+      else return getGradient(context,a.maxScore == null || a.score == null ? double.tryParse(a.score) : double.parse(a.score) / a.maxScore * 100, pseudo: pseudo);
   }
 
   static LinearGradient getGradient(BuildContext context, double grade,

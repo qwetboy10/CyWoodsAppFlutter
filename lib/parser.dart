@@ -18,10 +18,9 @@ class Parser {
   String toString() {
     String ret =
         '${error?.toString() ?? "NO ERROR"}\n${trace?.toString() ?? "NO TRACE"}';
-      ret += '\nClasses: ${classes.length}';
-      return ret;
+    ret += '\nClasses: ${classes.length}';
+    return ret;
   }
-
 
   String getLastUpdated() => lastUpdated == null
       ? 'Unknown'
@@ -52,7 +51,9 @@ class Parser {
     }
   }
   List<Assignment> gradesHasChanged(Parser old) {
-    if (old.classes.length != classes.length) {
+    if (old == null ||
+        old.error != null ||
+        old.classes.length != classes.length) {
       return [];
     }
     List<Assignment> changes = [];
@@ -157,7 +158,8 @@ class Class {
   List<double> categoryPoints;
   List<double> categoryTotals;
   String getGrade(int category) {
-    return pseudoCategoryPoints[category] == null
+    return pseudoCategoryPoints[category] == null ||
+            pseudoCategoryTotals[category] == 0
         ? null
         : (pseudoCategoryPoints[category] /
                 pseudoCategoryTotals[category] *
@@ -182,7 +184,7 @@ class Class {
       '$name - $grade - $teacherName - $teacherEmail -  ${categoryPoints.toString()} - ${categoryTotals.toString()} - ${categoryWeights.toString()}';
 
   bool modified(int category) =>
-      categoryTotals[category] != pseudoCategoryTotals[category];
+      (categoryTotals[category] ?? 0) != pseudoCategoryTotals[category];
   //the grades you see will always be based of these two pseudo category totals
   //if you dont have any pseudogrades they will be equal to the normal categoey totals tho
   void addPseudoAssignment(String name, String category, double score) {
@@ -204,6 +206,10 @@ class Class {
   void refreshPseudoCategories() {
     pseudoCategoryPoints = []..addAll(categoryPoints);
     pseudoCategoryTotals = []..addAll(categoryTotals);
+    for (int i = 0; i < 3; i++) {
+      if (pseudoCategoryPoints[i] == null) pseudoCategoryPoints[i] = 0;
+      if (pseudoCategoryTotals[i] == null) pseudoCategoryTotals[i] = 0;
+    }
     for (Assignment a in pseudoAssignments) {
       int cat = categories.indexOf(a.category);
       if (cat == -1) throw Exception('Category not found');
@@ -234,6 +240,14 @@ class Class {
 
     categoryWeights =
         categories.map((String s) => weights[s] as double).toList();
+    int nulls = categoryWeights.where((double d) => d == null).toList().length;
+    if (nulls == 1) {
+      double sum = categoryWeights
+          .where((double d) => d != null)
+          .reduce((double a, double b) => a + b);
+      for (int i = 0; i < 3; i++)
+        if (categoryWeights[i] == null) categoryWeights[i] = 1.0 - sum;
+    }
     Map<String, dynamic> points = data['categoryPoints'];
     categoryPoints = [];
     categoryTotals = [];
@@ -250,45 +264,125 @@ class Class {
   }
   //hope this works
   String gradeToKeep(int category) {
-    if ([0, 1, 2].any((int i) => categoryWeights[i] == null))
-      return "Your Grade Cannot Be Calculated At This Time";
-    if (categoryPoints[category] == null) return '---';
+    if (categoryWeights[category] == null) return '---';
+    if (getGradeDouble() < 89.5) {
+      int nulls =
+          categoryWeights.where((double d) => d == null).toList().length;
+      double gradeRequired =
+          [89.5, 79.5, 69.5].lastWhere((double d) => getGradeDouble() < d);
+      String current =
+          gradeRequired == 89.5 ? 'A' : gradeRequired == 79.5 ? 'B' : 'C';
+      double points = gradeRequired;
+      StateData.logInfo(categoryWeights.toString());
+      if (nulls == 2) {
+        points /= 100;
+        points *= pseudoCategoryTotals[category] + 100;
+        points -= pseudoCategoryPoints[category];
+      } else {
+        for (int i = 0; i < 3; i++) {
+          if (i != category) {
+            if (pseudoCategoryTotals[i] == 0)
+              points -= 100 * categoryWeights[i];
+            else
+              points -= 100 *
+                  categoryWeights[i] *
+                  pseudoCategoryPoints[i] /
+                  pseudoCategoryTotals[i];
+          }
+        }
+        points /= 100;
+        StateData.logInfo(points.toString());
+        points /= categoryWeights[category];
+        points *= (pseudoCategoryTotals[category] + 100);
+        points -= pseudoCategoryPoints[category];
+      }
+      if(points <= 100 && points >= 0) return 'Get at least a ${points.toStringAsFixed(2)} on your next assignment to get a${current == "A" ? "n" : ""} $current';
+    }
+    int nulls = categoryWeights.where((double d) => d == null).toList().length;
+    double gradeRequired =
+        [89.5, 79.5, 69.5].firstWhere((double d) => getGradeDouble() > d);
+    if(gradeRequired == null) gradeRequired = 69.5;
+    String current =
+        gradeRequired == 89.5 ? 'A' : gradeRequired == 79.5 ? 'B' : 'C';
+    double points = gradeRequired;
+    StateData.logInfo(categoryWeights.toString());
+    if (nulls == 2) {
+      points /= 100;
+      points *= pseudoCategoryTotals[category] + 100;
+      points -= pseudoCategoryPoints[category];
+      return 'Get at least a ${points.toStringAsFixed(2)} on your next assignment to keep a${current == "A" ? "n" : ""} $current';
+    } else {
+      for (int i = 0; i < 3; i++) {
+        if (i != category) {
+          if (pseudoCategoryTotals[i] == 0)
+            points -= 100 * categoryWeights[i];
+          else
+            points -= 100 *
+                categoryWeights[i] *
+                pseudoCategoryPoints[i] /
+                pseudoCategoryTotals[i];
+        }
+      }
+      points /= 100;
+      StateData.logInfo(points.toString());
+      points /= categoryWeights[category];
+      points *= (pseudoCategoryTotals[category] + 100);
+      points -= pseudoCategoryPoints[category];
+      if(points < 0) points = 0;
+      return 'Get at least a ${points.toStringAsFixed(2)} on your next assignment to keep a${current == "A" ? "n" : ""} $current';
+    }
+    /*
+    if (categoryWeights[category] == null) return '---';
     double gradeRequired =
         [89.5, 79.5, 69.5].firstWhere((double d) => grade > d);
     String current =
         gradeRequired == 89.5 ? 'A' : gradeRequired == 79.5 ? 'B' : 'C';
     double points = gradeRequired;
-    [0, 1, 2].where((int i) => i != category).forEach((int i) => points -=
-        categoryWeights[i] *
-            (categoryPoints[i] == null
-                ? 100
-                : categoryPoints[i] / categoryTotals[i] * 100));
-    points /= categoryWeights[category];
+    double weightSum = 0;
+    for(int i=0;i<3;i++) if(pseudoCategoryTotals[i] != 0 && categoryWeights[i] != null) weightSum += categoryWeights[i];
+    [0, 1, 2]
+        .where((int i) => i != category && categoryWeights[i] != null)
+        .forEach((int i) => points -= (categoryWeights[i] / weightSum) *
+            (pseudoCategoryTotals[i] == 0
+                ? 0
+                : pseudoCategoryPoints[i] / pseudoCategoryTotals[i] * 100));
+    points /= (categoryWeights[category] / weightSum);
     //category average must be at least equal to points
-    double tempCategoryPoints = categoryPoints[category];
-    double tempCategoryTotals = categoryTotals[category];
+    double tempCategoryPoints = pseudoCategoryPoints[category];
+    double tempCategoryTotals = pseudoCategoryTotals[category];
     tempCategoryTotals += 100;
     points *= tempCategoryTotals / 100;
     points -= tempCategoryPoints;
-    return 'Get at least an ${points.toStringAsFixed(2)} to keep a${current == "A" ? "n" : ""} $current';
+    if (points < 0) points = 0;
+    return 'Get at least a ${points.toStringAsFixed(2)} on your next assignment to keep a${current == "A" ? "n" : ""} $current';*/
   }
 
   String getGradeString() => anyModified()
-      ? [0, 1, 2].any((int i) => categoryWeights[i] == null)
-          ? 'No Grade Found For This Category'
-          : [0, 1, 2]
+      ? 
+           ([0, 1, 2]
               .map((int i) =>
-                  pseudoCategoryPoints[i] /
+                  categoryWeights[i] != null ? pseudoCategoryPoints[i] /
                   pseudoCategoryTotals[i] *
                   categoryWeights[i] *
-                  100)
-              .reduce((a, b) => a + b)
+                  100 : 0)
+              .reduce((a, b) => a + b) / categoryWeights.where((double d) => d != null).reduce((double a, double b) => a+b))
               .toStringAsFixed(2)
-      : grade?.toString() ?? '---';
+      : grade?.toStringAsFixed(2) ?? '---';
+  double getGradeDouble() => anyModified()
+      ? 
+           ([0, 1, 2]
+              .map((int i) =>
+                  categoryWeights[i] != null ? pseudoCategoryPoints[i] /
+                  pseudoCategoryTotals[i] *
+                  categoryWeights[i] *
+                  100 : 0)
+              .reduce((a, b) => a + b) / categoryWeights.where((double d) => d != null).reduce((double a, double b) => a+b))
+      : grade;
   bool anyModified() => [0, 1, 2].any((int i) => modified(i));
 }
 
 class Assignment {
+  bool isNew;
   bool operator ==(o) => name == o.name;
   int get hashCode => name.hashCode;
   Assignment(Map<String, dynamic> data) {
@@ -302,6 +396,7 @@ class Assignment {
     extraCredit = data['extraCredit'];
     note = data['note'];
     psuedo = false;
+    isNew = false;
   }
   Assignment.pseudo(this.name, this.category, this.score) {
     psuedo = true;
@@ -315,8 +410,7 @@ class Assignment {
     }
   }
 
-  String toString() =>
-      '$name - $category $score';
+  String toString() => '$name - $category $score';
   String name;
   String category;
   String dateAssigned;

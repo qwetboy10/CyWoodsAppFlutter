@@ -85,7 +85,8 @@ class ChangeProfileState extends State<ChangeProfile> {
                     onTap: () {
                       (profiles[index].getUsername() ==
                                   snapshot.data?.getUsername()
-                              ? buildAreYouSureDeleteDialog(context, profiles, index)
+                              ? buildAreYouSureDeleteDialog(
+                                  context, profiles, index)
                               : buildAreYouSureDialog(context, profiles, index))
                           .then((bool status) {
                         if (status != null && status == true)
@@ -134,36 +135,37 @@ class ChangeProfileState extends State<ChangeProfile> {
           );
         });
   }
-Future<bool> buildAreYouSureDeleteDialog(
+
+  Future<bool> buildAreYouSureDeleteDialog(
       BuildContext context, List<Profile> profiles, int index) {
-        return showDialog(
-                context: context,
-                builder: (BuildContext context) => AlertDialog(
-            title: Text('Do You Want To Delete This Profile?'),
-            actions: <Widget>[
-              FlatButton(
-                child: Text(
-                  'Yes',
-                  style: TextStyle(color: Theme.of(context).primaryColor),
+    return showDialog(
+        context: context,
+        builder: (BuildContext context) => AlertDialog(
+              title: Text('Do You Want To Delete This Profile?'),
+              actions: <Widget>[
+                FlatButton(
+                  child: Text(
+                    'Yes',
+                    style: TextStyle(color: Theme.of(context).primaryColor),
+                  ),
+                  onPressed: () {
+                    setState(() {
+                      Profile.deleteProfile(profiles[index]);
+                    });
+                    Navigator.of(context).pop(true);
+                  },
                 ),
-                onPressed: () {
-                  setState(() {
-                    Profile.deleteProfile(profiles[index]);
-                  });
-                  Navigator.of(context).pop(true);
-                },
-              ),
-              FlatButton(
-                child: Text(
-                  'No',
-                  style: TextStyle(color: Theme.of(context).primaryColor),
+                FlatButton(
+                  child: Text(
+                    'No',
+                    style: TextStyle(color: Theme.of(context).primaryColor),
+                  ),
+                  onPressed: () => Navigator.of(context).pop(false),
                 ),
-                onPressed: () => Navigator.of(context).pop(false),
-              ),
-            ],
-          ));
-        
+              ],
+            ));
   }
+
   Future<bool> buildLogoutDialog(
       BuildContext context, List<Profile> profiles, int index) {
     return showDialog(
