@@ -245,89 +245,98 @@ class GradesState extends State<Grades> {
     else
       return getGradient(
           context,
-          a.maxScore == null || a.score == null
+          a.maxScore == null || a.score == null || a.maxScore == 0
               ? double.tryParse(a.score)
-              : double.parse(a.score) / a.maxScore * 100,
+              : double.tryParse(a.score) != null ? double.parse(a.score) / a.maxScore * 100 : null, 
           pseudo: pseudo);
   }
 
   static LinearGradient getGradient(BuildContext context, double grade,
       {bool pseudo = false}) {
-    if (pseudo)
+    try {
+      if (pseudo)
+        return LinearGradient(
+          colors: [Theme.of(context).colorScheme.secondary],
+          stops: [1],
+        );
+      if (grade == null)
+        return LinearGradient(
+            colors: [Theme.of(context).colorScheme.surface], stops: [1]);
+      if (Theme.of(context).brightness == Brightness.light) {
+        if (grade >= 89.5)
+          return LinearGradient(
+            colors: [
+              Theme.of(context).colorScheme.surface,
+              CustomTheme.of(context).a
+            ],
+            stops: [.65, 1],
+          );
+        else if (grade >= 79.5)
+          return LinearGradient(
+            colors: [
+              Theme.of(context).colorScheme.surface,
+              CustomTheme.of(context).b
+            ],
+            stops: [.65, 1],
+          );
+        else if (grade >= 69.5)
+          return LinearGradient(
+            colors: [
+              Theme.of(context).colorScheme.surface,
+              CustomTheme.of(context).c
+            ],
+            stops: [.65, 1],
+          );
+        else
+          return LinearGradient(
+            colors: [
+              Theme.of(context).colorScheme.surface,
+              CustomTheme.of(context).f
+            ],
+            stops: [.65, 1],
+          );
+      }
+      if (Theme.of(context).brightness == Brightness.dark) {
+        if (grade >= 89.5)
+          return LinearGradient(
+            colors: [
+              Theme.of(context).colorScheme.surface,
+              CustomThemeDark.of(context).a
+            ],
+            stops: [.65, 1],
+          );
+        else if (grade >= 79.5)
+          return LinearGradient(
+            colors: [
+              Theme.of(context).colorScheme.surface,
+              CustomThemeDark.of(context).b
+            ],
+            stops: [.65, 1],
+          );
+        else if (grade >= 69.5)
+          return LinearGradient(
+            colors: [
+              Theme.of(context).colorScheme.surface,
+              CustomThemeDark.of(context).c
+            ],
+            stops: [.65, 1],
+          );
+        else
+          return LinearGradient(
+            colors: [
+              Theme.of(context).colorScheme.surface,
+              CustomThemeDark.of(context).f
+            ],
+            stops: [.65, 1],
+          );
+      }
+    } catch (e, t) {
+      StateData.logError("Gradient Error", error: e, trace: t);
+
       return LinearGradient(
         colors: [Theme.of(context).colorScheme.secondary],
         stops: [1],
       );
-    if (grade == null)
-      return LinearGradient(
-          colors: [Theme.of(context).colorScheme.surface], stops: [1]);
-    if (Theme.of(context).brightness == Brightness.light) {
-      if (grade >= 89.5)
-        return LinearGradient(
-          colors: [
-            Theme.of(context).colorScheme.surface,
-            CustomTheme.of(context).a
-          ],
-          stops: [.65, 1],
-        );
-      else if (grade >= 79.5)
-        return LinearGradient(
-          colors: [
-            Theme.of(context).colorScheme.surface,
-            CustomTheme.of(context).b
-          ],
-          stops: [.65, 1],
-        );
-      else if (grade >= 69.5)
-        return LinearGradient(
-          colors: [
-            Theme.of(context).colorScheme.surface,
-            CustomTheme.of(context).c
-          ],
-          stops: [.65, 1],
-        );
-      else
-        return LinearGradient(
-          colors: [
-            Theme.of(context).colorScheme.surface,
-            CustomTheme.of(context).f
-          ],
-          stops: [.65, 1],
-        );
-    }
-    if (Theme.of(context).brightness == Brightness.dark) {
-      if (grade >= 89.5)
-        return LinearGradient(
-          colors: [
-            Theme.of(context).colorScheme.surface,
-            CustomThemeDark.of(context).a
-          ],
-          stops: [.65, 1],
-        );
-      else if (grade >= 79.5)
-        return LinearGradient(
-          colors: [
-            Theme.of(context).colorScheme.surface,
-            CustomThemeDark.of(context).b
-          ],
-          stops: [.65, 1],
-        );
-      else if (grade >= 69.5)
-        return LinearGradient(
-          colors: [
-            Theme.of(context).colorScheme.surface,
-            CustomThemeDark.of(context).c
-          ],
-          stops: [.65, 1],
-        );
-      else
-        return LinearGradient(
-          colors: [
-            Theme.of(context).colorScheme.surface,
-            CustomThemeDark.of(context).f
-          ],
-          stops: [.65, 1],
-        );
     }
   }
 }

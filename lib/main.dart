@@ -235,7 +235,7 @@ class WidgetContainerState extends State<WidgetContainer> {
   int lunch;
   WidgetContainerState(SharedPreferences prefs) {
     seconds = prefs.getBool("SECONDS") ?? false;
-   lunch = prefs.getInt("DEFAULTLUNCH");
+    lunch = prefs.getInt("DEFAULTLUNCH");
   }
   SharedPreferences prefs;
   int currentScreen = 0;
@@ -552,8 +552,13 @@ class WidgetContainerState extends State<WidgetContainer> {
                 }
               }),
             ),
-            ExpansionTile(
-              title: Text('More Settings'),
+            custom.ExpansionTile(
+              title: Text(
+                'More Settings',
+                //style:
+                 //   TextStyle(color: Theme.of(context).colorScheme.onSurface),
+              ),
+              headerBackgroundColor: Theme.of(context).canvasColor,
               children: <Widget>[
                 ListTile(
                   title: Text('Show seconds on schedule?'),
@@ -600,7 +605,6 @@ class WidgetContainerState extends State<WidgetContainer> {
                     ],
                   ),
                 ),
-
               ],
             )
           ].where((dynamic d) => d != null).toList(),
@@ -646,8 +650,8 @@ class WidgetContainerState extends State<WidgetContainer> {
 
               if (snap.data.getBool("THEME5") != null &&
                   snap.data.getBool("THEME5")) themes.add(5);
-              
-              if (snap.data.getBool("THEME6") != null && 
+
+              if (snap.data.getBool("THEME6") != null &&
                   snap.data.getBool("THEME6")) themes.add(6);
               StateData.logInfo("Themes: ${themes}");
               return Column(
