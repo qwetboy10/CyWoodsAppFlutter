@@ -384,8 +384,8 @@ class Class {
 
 class Assignment {
   bool isNew;
-  bool operator ==(o) => name == o.name;
-  int get hashCode => name.hashCode;
+  bool operator ==(o) => name == o.name && score == o.score;
+  int get hashCode => ((17 * 31) + name.hashCode) * 31 + score.hashCode;
   Assignment(Map<String, dynamic> data) {
     name = data['name'];
     category = data['category'];
