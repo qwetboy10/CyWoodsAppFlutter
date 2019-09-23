@@ -114,6 +114,7 @@ class FinalCalculatorState extends State<FinalCalculator> {
         child: Padding(
           padding: const EdgeInsets.all(8.0),
           child: TextField(
+            keyboardType: TextInputType.number,
             controller: controllers[i][j],
             textAlign: TextAlign.center,
             decoration: InputDecoration(
@@ -127,7 +128,13 @@ class FinalCalculatorState extends State<FinalCalculator> {
               try {
                 hint = List.generate(20, (int i) => List.filled(4, null));
                 setState(() {
-                  getMissing(i, context);
+                  for (int k = 0; k < 20; k++) {
+                    try {
+                      getMissing(k, context);
+                    } catch (e, t) {
+                      debugPrint(e.toString());
+                    }
+                  }
                 });
               } catch (e) {}
             },

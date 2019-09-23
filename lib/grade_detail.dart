@@ -54,6 +54,7 @@ class PseudoDialogState extends State<PseudoDialog> {
                   controller: nameController,
                 ),
                 TextField(
+                  keyboardType: TextInputType.numberWithOptions(decimal: true),
                   decoration: InputDecoration(
                       hintText: 'Grade',
                       errorText: (double.tryParse(gradeController.text) ??

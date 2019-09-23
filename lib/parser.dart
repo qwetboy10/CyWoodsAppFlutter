@@ -59,7 +59,7 @@ class Parser {
     List<Assignment> changes = [];
     for (int i = 0; i < classes.length; i++)
       changes.addAll(classes[i].assignmentChanges(old.classes[i]));
-    return changes;
+    return changes.where((Assignment a) => a.score != null && a.score.length != 0).toList();
   }
 
   String graphSnaphot() =>
@@ -274,6 +274,7 @@ class Class {
           gradeRequired == 89.5 ? 'A' : gradeRequired == 79.5 ? 'B' : 'C';
       double points = gradeRequired;
       StateData.logInfo(categoryWeights.toString());
+      double categoryWeightSum = categoryWeights.where((double d) => d != null).fold(0, (num a, double b) => a+b).toDouble();
       if (nulls == 2) {
         points /= 100;
         points *= pseudoCategoryTotals[category] + 100;
@@ -282,21 +283,21 @@ class Class {
         for (int i = 0; i < 3; i++) {
           if (i != category) {
             if (pseudoCategoryTotals[i] == 0)
-              points -= 100 * categoryWeights[i];
+              continue;
             else
               points -= 100 *
-                  categoryWeights[i] *
+                  (categoryWeights[i] / categoryWeightSum) *
                   pseudoCategoryPoints[i] /
                   pseudoCategoryTotals[i];
           }
         }
         points /= 100;
         StateData.logInfo(points.toString());
-        points /= categoryWeights[category];
+        points /= (categoryWeights[category] / categoryWeightSum);
         points *= (pseudoCategoryTotals[category] + 100);
         points -= pseudoCategoryPoints[category];
       }
-      if(points <= 100 && points >= 0) return 'Get at least a ${points.toStringAsFixed(2)} on your next assignment to get a${current == "A" ? "n" : ""} $current';
+      if(points <= 105 && points >= 0) return 'Get at least a ${points.toStringAsFixed(2)} on your next assignment to get a${current == "A" ? "n" : ""} $current';
     }
     int nulls = categoryWeights.where((double d) => d == null).toList().length;
     double gradeRequired =
