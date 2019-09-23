@@ -63,7 +63,7 @@ class ScheduleState extends State<Schedule> {
       StateData.lunch = p.getInt("DEFAULTLUNCH") ?? 0;
       });
     });
-  t = new Timer.periodic(Duration(seconds: 10), (_) {
+  t = new Timer.periodic(Duration(seconds: 1), (_) {
      setState(() {
     });
   });
