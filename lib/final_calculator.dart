@@ -121,8 +121,8 @@ class FinalCalculatorState extends State<FinalCalculator> {
               focusColor: Colors.red,
               border: UnderlineInputBorder(),
               hintText: hint[i][j] == null
-                  ? '0.00'
-                  : hint[i][j] < 0 ? '0.00' : hint[i][j].toStringAsFixed(2),
+                  ? '0'
+                  : hint[i][j] < 0 ? '0' : hint[i][j].toStringAsFixed(2),
             ),
             onChanged: (String s) {
               try {
