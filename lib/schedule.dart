@@ -396,7 +396,10 @@ class ScheduleState extends State<Schedule> {
           subtitle: Text(
             data.timeString() +
                 (data.current()
-                    ? ' (${data.end.difference(DateTime.now()).inMinutes.toString()} Minute${data.end.difference(DateTime.now()).inMinutes != 1 ? 's' : ''} ${seconds && secondsRemaining(data.end) < 60?"And "+secondsRemaining(data.end).toString() + " seconds":""} Remaining)'
+                    ? 
+                    secondsRemaining(data.end) < 60 ?
+                    ' (${seconds?secondsRemaining(data.end).toString() + " Seconds Remaining":""})'
+                    : ' (${data.end.difference(DateTime.now()).inMinutes.toString()} Minute${data.end.difference(DateTime.now()).inMinutes != 1 ? 's' : ''} Remaining)'
                     : ""),
           ),
         ),

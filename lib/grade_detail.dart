@@ -175,6 +175,7 @@ class GradeDetailState extends State<GradeDetail> {
 
   Widget build(BuildContext context) {
     return Scaffold(
+     resizeToAvoidBottomPadding: false, 
       appBar: AppBar(
         title: Text(([0, 1, 2].any((int i) => widget.currentClass.modified(i))
             ? "EDIT MODE"
@@ -276,6 +277,9 @@ class GradeDetailState extends State<GradeDetail> {
                   height: 1,
                 ),
                 itemBuilder: (BuildContext context, int index) {
+                  try 
+{
+                  
                   Assignment current;
                   if (index < widget.currentClass.pseudoAssignments.length)
                     current = widget.currentClass.pseudoAssignments[index];
@@ -325,13 +329,18 @@ class GradeDetailState extends State<GradeDetail> {
                             )
                           : null,
                       onTap: () {
-                        showDialog(
-                            context: context,
-                            builder: (BuildContext context) =>
-                                buildGradeDialog(context, current));
+                        if (!current.psuedo)
+                          showDialog(
+                              context: context,
+                              builder: (BuildContext context) =>
+                                  buildGradeDialog(context, current));
                       },
                     ),
-                  );
+                  );}
+                  catch(e,t)
+                  {
+                    return ListTile(title: Text(e.toString()),);
+                  }
                 },
                 itemCount: widget.currentClass.assignments.length +
                     widget.currentClass.pseudoAssignments.length,
