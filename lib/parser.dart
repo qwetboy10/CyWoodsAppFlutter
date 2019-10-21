@@ -266,7 +266,7 @@ class Class {
   }
   //hope this works
   String gradeToKeep(int category) {
-    if (categoryWeights[category] == null) return '---';
+    if (categoryWeights[category] == null || getGradeDouble() == null) return '---';
     if (getGradeDouble() < 89.5) {
       int nulls =
           categoryWeights.where((double d) => d == null).toList().length;
