@@ -266,6 +266,7 @@ class Class {
   }
   //hope this works
   String gradeToKeep(int category) {
+    try {
     if (categoryWeights[category] == null || getGradeDouble() == null) return '---';
     if (getGradeDouble() < 89.5) {
       int nulls =
@@ -358,6 +359,12 @@ class Class {
     points -= tempCategoryPoints;
     if (points < 0) points = 0;
     return 'Get at least a ${points.toStringAsFixed(2)} on your next assignment to keep a${current == "A" ? "n" : ""} $current';*/
+    }
+    catch(e, t)
+    {
+      StateData.logError('Get next grade failed', error: e, trace: t);
+    }
+    return '---';
   }
 
   String getGradeString() => anyModified()

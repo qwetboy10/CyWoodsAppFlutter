@@ -240,6 +240,7 @@ class GradesState extends State<Grades> {
   static LinearGradient getGradientAssignment(
       BuildContext context, Assignment a,
       {bool pseudo = false}) {
+        try {
     if (a.extraCredit ?? false)
       return getGradient(context, 100, pseudo: pseudo);
     else
@@ -249,6 +250,12 @@ class GradesState extends State<Grades> {
               ? double.tryParse(a.score)
               : double.tryParse(a.score) != null ? double.parse(a.score) / a.maxScore * 100 : null, 
           pseudo: pseudo);
+        }
+        catch(e, t)
+        {
+          StateData.logError('get Gradient Assignment failed', error: e, trace: t);
+          return getGradient(context, 0);
+        }
   }
 
   static LinearGradient getGradient(BuildContext context, double grade,

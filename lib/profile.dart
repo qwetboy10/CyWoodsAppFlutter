@@ -94,8 +94,9 @@ class Profile {
         List<Assignment> ass = updateParserChanges();
         Profile.save(this);
         if (this.parser.error == null) {
+          
           if (this.parser.classes.fold(true,
-              (bool b, Class c) => c.grade != null && b && c.grade >= 89.5)) {
+              (bool b, Class c) => (c.grade != null && c.grade >= 89.5 || c.name == 'Early Release' || c.name == 'Late Arrival') && b)) {
             StateData.unlockTheme(3);
           }
           if (this.parser.classes.fold(true,
