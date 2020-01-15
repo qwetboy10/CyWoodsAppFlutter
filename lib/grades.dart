@@ -18,6 +18,7 @@ class Grades extends StatefulWidget {
 }
 
 class GradesState extends State<Grades> {
+  Future<SharedPreferences> prefs = SharedPreferences.getInstance();
   void refreshProfile() {
     setState(() {
       profile = Profile.getDefaultProfile();
@@ -43,14 +44,27 @@ class GradesState extends State<Grades> {
               ),
             );
           case ConnectionState.done:
-            return buildGrades(context, snap.data);
+            Profile profile = snap.data;
+            return FutureBuilder(
+                future: prefs,
+                builder: (BuildContext context,
+                    AsyncSnapshot<SharedPreferences> snap) {
+                  if (snap.connectionState == ConnectionState.done) {
+                    return buildGrades(context, profile, snap.data);
+                  } else
+                    return Center(
+                        child: CircularProgressIndicator(
+                            valueColor: AlwaysStoppedAnimation<Color>(
+                                Theme.of(context).primaryColor)));
+                });
         }
         return null;
       },
     );
   }
 
-  Widget buildGrades(BuildContext context, Profile profile) {
+  Widget buildGrades(
+      BuildContext context, Profile profile, SharedPreferences prefs) {
     if (profile == null)
       return Column(
         children: <Widget>[
@@ -160,7 +174,8 @@ class GradesState extends State<Grades> {
                 ),
               );
             } else {
-              return buildGradeTile(context, profile, index);
+              return buildGradeTile(
+                  context, profile, index, prefs.getBool("COLORS"));
             }
           },
         ),
@@ -182,7 +197,8 @@ class GradesState extends State<Grades> {
     );
   }
 
-  Widget buildGradeTile(BuildContext context, Profile profile, int index) {
+  Widget buildGradeTile(
+      BuildContext context, Profile profile, int index, bool color) {
     try {
       return Container(
         child: ListTile(
@@ -226,8 +242,10 @@ class GradesState extends State<Grades> {
           trailing: Text(profile.parser.classes[index - 1].getGradeString()),
         ),
         decoration: BoxDecoration(
-            gradient:
-                getGradient(context, profile.parser.classes[index - 1].grade)),
+          gradient: getGradient(
+              context, profile.parser.classes[index - 1].grade,
+              color: color),
+        ),
       );
     } catch (e, trace) {
       StateData.logError("Grade Build Failed", error: e, trace: trace);
@@ -239,34 +257,35 @@ class GradesState extends State<Grades> {
 
   static LinearGradient getGradientAssignment(
       BuildContext context, Assignment a,
-      {bool pseudo = false}) {
-        try {
-    if (a.extraCredit ?? false)
-      return getGradient(context, 100, pseudo: pseudo);
-    else
-      return getGradient(
-          context,
-          a.maxScore == null || a.score == null || a.maxScore == 0
-              ? double.tryParse(a.score)
-              : double.tryParse(a.score) != null ? double.parse(a.score) / a.maxScore * 100 : null, 
-          pseudo: pseudo);
-        }
-        catch(e, t)
-        {
-          StateData.logError('get Gradient Assignment failed', error: e, trace: t);
-          return getGradient(context, 0);
-        }
+      {bool pseudo = false, bool color = true}) {
+    try {
+      if (a.extraCredit ?? false)
+        return getGradient(context, 100, pseudo: pseudo, color: color);
+      else
+        return getGradient(
+            context,
+            a.maxScore == null || a.score == null || a.maxScore == 0
+                ? double.tryParse(a.score)
+                : double.tryParse(a.score) != null
+                    ? double.parse(a.score) / a.maxScore * 100
+                    : null,
+            pseudo: pseudo,
+            color: color);
+    } catch (e, t) {
+      StateData.logError('get Gradient Assignment failed', error: e, trace: t);
+      return getGradient(context, 0);
+    }
   }
 
   static LinearGradient getGradient(BuildContext context, double grade,
-      {bool pseudo = false}) {
+      {bool pseudo = false, bool color = true}) {
     try {
       if (pseudo)
         return LinearGradient(
           colors: [Theme.of(context).colorScheme.secondary],
           stops: [1],
         );
-      if (grade == null)
+      if (grade == null || !color)
         return LinearGradient(
             colors: [Theme.of(context).colorScheme.surface], stops: [1]);
       if (Theme.of(context).brightness == Brightness.light) {

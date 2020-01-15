@@ -5,6 +5,7 @@ import 'grades.dart';
 import 'customExpansionTile.dart' as custom;
 import 'parser.dart';
 import 'cywoodsapp_icons.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class PseudoDialog extends StatefulWidget {
   final Class clas;
@@ -219,134 +220,179 @@ class GradeDetailState extends State<GradeDetail> {
         ],
       ),
       backgroundColor: Theme.of(context).backgroundColor,
-      body: SafeArea(
-        child: Column(
-          children: <Widget>[
-            custom.ExpansionTile(
-              initiallyExpanded: true,
-              title: Text('Overall Grade'),
-              trailing: Text(widget.currentClass?.getGradeString() ?? '---'),
+      body: FutureBuilder(
+        future: SharedPreferences.getInstance(),
+        builder: (BuildContext context,
+                AsyncSnapshot<SharedPreferences> snap) =>
+            snap.connectionState == ConnectionState.done
+                ? SafeArea(
+                    child: Column(
+                      children: <Widget>[
+                        custom.ExpansionTile(
+                          initiallyExpanded: true,
+                          title: Text('Overall Grade'),
+                          trailing: Text(
+                              widget.currentClass?.getGradeString() ?? '---'),
 
-              //decowidget.currentClass.modified(index) ? Theme.of(context).colorScheme.secondary : Theme.of(context).colorScheme.surface,
-              headerBackgroundColor:
-                  ([0, 1, 2].any((int i) => widget.currentClass.modified(i))
-                      ? Theme.of(context).colorScheme.secondary
-                      : Theme.of(context).colorScheme.surface),
+                          //decowidget.currentClass.modified(index) ? Theme.of(context).colorScheme.secondary : Theme.of(context).colorScheme.surface,
+                          headerBackgroundColor: ([
+                            0,
+                            1,
+                            2
+                          ].any((int i) => widget.currentClass.modified(i))
+                              ? Theme.of(context).colorScheme.secondary
+                              : Theme.of(context).colorScheme.surface),
 
-              children: widget.currentClass.categories
-                  .asMap()
-                  .map((int index, String name) => MapEntry(
-                      index,
-                      custom.ExpansionTile(
-                        headerBackgroundColor:
-                            widget.currentClass.modified(index)
-                                ? Theme.of(context).colorScheme.secondary
-                                : Theme.of(context).colorScheme.surface,
-                        title: Text(
-                          widget.currentClass.categoryWeights[index] == null
-                              ? '$name'
-                              : '$name (${(widget.currentClass.categoryWeights[index] * 100).toStringAsFixed(0)}%)',
+                          children: widget.currentClass.categories
+                              .asMap()
+                              .map((int index, String name) => MapEntry(
+                                  index,
+                                  custom.ExpansionTile(
+                                    headerBackgroundColor: widget.currentClass
+                                            .modified(index)
+                                        ? Theme.of(context)
+                                            .colorScheme
+                                            .secondary
+                                        : Theme.of(context).colorScheme.surface,
+                                    title: Text(
+                                      widget.currentClass
+                                                  .categoryWeights[index] ==
+                                              null
+                                          ? '$name'
+                                          : '$name (${(widget.currentClass.categoryWeights[index] * 100).toStringAsFixed(0)}%)',
+                                    ),
+                                    trailing: Text(widget.currentClass
+                                            .getGrade(index)
+                                            ?.toString() ??
+                                        '---'),
+                                    children: <Widget>[
+                                      Container(
+                                        padding:
+                                            EdgeInsets.only(left: 8, bottom: 8),
+                                        alignment: Alignment.centerLeft,
+                                        decoration: BoxDecoration(
+                                          color: widget.currentClass
+                                                  .modified(index)
+                                              ? Theme.of(context)
+                                                  .colorScheme
+                                                  .secondary
+                                              : Theme.of(context)
+                                                  .colorScheme
+                                                  .surface,
+                                        ),
+                                        width: double.infinity,
+                                        child: Text(
+                                          widget.currentClass
+                                              .gradeToKeep(index)
+                                              .toString(),
+                                          style: TextStyle(
+                                              color: Colors.grey[700]),
+                                        ),
+                                      )
+                                    ],
+                                  )))
+                              .values
+                              .toList(),
                         ),
-                        trailing: Text(
-                            widget.currentClass.getGrade(index)?.toString() ??
-                                '---'),
-                        children: <Widget>[
-                          Container(
-                            padding: EdgeInsets.only(left: 8, bottom: 8),
-                            alignment: Alignment.centerLeft,
-                            decoration: BoxDecoration(
-                              color: widget.currentClass.modified(index)
-                                  ? Theme.of(context).colorScheme.secondary
-                                  : Theme.of(context).colorScheme.surface,
+                        Expanded(
+                          flex: 10,
+                          child: ListView.separated(
+                            separatorBuilder:
+                                (BuildContext context, int index) => Divider(
+                              height: 1,
                             ),
-                            width: double.infinity,
-                            child: Text(
-                              widget.currentClass.gradeToKeep(index).toString(),
-                              style: TextStyle(color: Colors.grey[700]),
-                            ),
-                          )
-                        ],
-                      )))
-                  .values
-                  .toList(),
-            ),
-            Expanded(
-              flex: 10,
-              child: ListView.separated(
-                separatorBuilder: (BuildContext context, int index) => Divider(
-                  height: 1,
-                ),
-                itemBuilder: (BuildContext context, int index) {
-                  try {
-                    Assignment current;
-                    if (index < widget.currentClass.pseudoAssignments.length)
-                      current = widget.currentClass.pseudoAssignments[index];
-                    else {
-                      widget.currentClass.assignments.sort(
-                          (Assignment a, Assignment b) =>
-                              widget.profile.newAssignments.contains(a)
-                                  ? -1
-                                  : widget.profile.newAssignments.contains(b)
-                                      ? 1
-                                      : 0);
-                      current = widget.currentClass.assignments[
-                          index - widget.currentClass.pseudoAssignments.length];
-                    }
-                    return Container(
-                      decoration: BoxDecoration(
-                          gradient: GradesState.getGradientAssignment(
-                              context, current,
-                              pseudo: current.psuedo)),
-                      child: ListTile(
-                        title: widget.profile.newAssignments.contains(current)
-                            ? Row(children: [
-                                Text(current.name),
-                                Container(
-                                  padding: EdgeInsets.all(8),
-                                  child: Icon(
-                                    FontAwesomeIcons.solidCircle,
-                                    size: 8,
-                                    color: Theme.of(context).primaryColor,
+                            itemBuilder: (BuildContext context, int index) {
+                              try {
+                                Assignment current;
+                                if (index <
+                                    widget
+                                        .currentClass.pseudoAssignments.length)
+                                  current = widget
+                                      .currentClass.pseudoAssignments[index];
+                                else {
+                                  widget.currentClass.assignments.sort(
+                                      (Assignment a, Assignment b) => widget
+                                              .profile.newAssignments
+                                              .contains(a)
+                                          ? -1
+                                          : widget.profile.newAssignments
+                                                  .contains(b)
+                                              ? 1
+                                              : 0);
+                                  current = widget.currentClass.assignments[
+                                      index -
+                                          widget.currentClass.pseudoAssignments
+                                              .length];
+                                }
+                                return Container(
+                                  decoration: BoxDecoration(
+                                      gradient:
+                                          GradesState.getGradientAssignment(
+                                              context, current,
+                                              pseudo: current.psuedo,
+                                              color:
+                                                  snap.data.getBool("COLORS"))),
+                                  child: ListTile(
+                                    title: widget.profile.newAssignments
+                                            .contains(current)
+                                        ? Row(children: [
+                                            Text(current.name),
+                                            Container(
+                                              padding: EdgeInsets.all(8),
+                                              child: Icon(
+                                                FontAwesomeIcons.solidCircle,
+                                                size: 8,
+                                                color: Theme.of(context)
+                                                    .primaryColor,
+                                              ),
+                                            ),
+                                          ])
+                                        : Text(current.name),
+                                    subtitle: Text(
+                                        '${current.category}${current.psuedo ? " (Fake Grade)" : ""}'),
+                                    trailing: Text(current.score),
+                                    leading: current.psuedo
+                                        ? IconButton(
+                                            icon: Icon(Icons.close),
+                                            iconSize: 12,
+                                            onPressed: () {
+                                              setState(() {
+                                                widget.currentClass
+                                                    .removePseudoAssignment(
+                                                        current.name);
+                                              });
+                                            },
+                                          )
+                                        : null,
+                                    onTap: () {
+                                      if (!current.psuedo)
+                                        showDialog(
+                                            context: context,
+                                            builder: (BuildContext context) =>
+                                                buildGradeDialog(
+                                                    context, current));
+                                    },
                                   ),
-                                ),
-                              ])
-                            : Text(current.name),
-                        subtitle: Text(
-                            '${current.category}${current.psuedo ? " (Fake Grade)" : ""}'),
-                        trailing: Text(current.score),
-                        leading: current.psuedo
-                            ? IconButton(
-                                icon: Icon(Icons.close),
-                                iconSize: 12,
-                                onPressed: () {
-                                  setState(() {
-                                    widget.currentClass
-                                        .removePseudoAssignment(current.name);
-                                  });
-                                },
-                              )
-                            : null,
-                        onTap: () {
-                          if (!current.psuedo)
-                            showDialog(
-                                context: context,
-                                builder: (BuildContext context) =>
-                                    buildGradeDialog(context, current));
-                        },
-                      ),
-                    );
-                  } catch (e, t) {
-                    return ListTile(
-                      title: Text(e.toString()),
-                    );
-                  }
-                },
-                itemCount: widget.currentClass.assignments.length +
-                    widget.currentClass.pseudoAssignments.length,
-              ),
-            ),
-          ],
-        ),
+                                );
+                              } catch (e, t) {
+                                return ListTile(
+                                  title: Text(e.toString()),
+                                );
+                              }
+                            },
+                            itemCount: widget.currentClass.assignments.length +
+                                widget.currentClass.pseudoAssignments.length,
+                          ),
+                        ),
+                      ],
+                    ),
+                  )
+                : Center(
+                    child: CircularProgressIndicator(
+                      valueColor: AlwaysStoppedAnimation<Color>(
+                          Theme.of(context).primaryColor),
+                    ),
+                  ),
       ),
     );
   }

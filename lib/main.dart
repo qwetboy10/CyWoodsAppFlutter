@@ -79,6 +79,14 @@ class MyAppState extends State<MyApp> {
     flutterLocalNotificationsPlugin.initialize(
       initializationSettings,
     );
+    var androidPlatformChannelSpecifics = AndroidNotificationDetails(
+        '0', 'Cy Woods App Grades', 'Recieve notifications of grades',
+        importance: Importance.Max,
+        priority: Priority.High,
+        ticker: 'New Grade');
+    var iOSPlatformChannelSpecifics = IOSNotificationDetails();
+    var platformChannelSpecifics = NotificationDetails(
+        androidPlatformChannelSpecifics, iOSPlatformChannelSpecifics);
     BackgroundFetch.configure(
         BackgroundFetchConfig(
             minimumFetchInterval: 15,
@@ -89,14 +97,6 @@ class MyAppState extends State<MyApp> {
       List<Assignment> ass = prof.updateParserChanges();
       StateData.logInfo('Notification Fetch, ${ass.length} found');
       if (ass.length != 0) {
-        var androidPlatformChannelSpecifics = AndroidNotificationDetails(
-            '0', 'Cy Woods App Grades', 'Recieve notifications of grades',
-            importance: Importance.Max,
-            priority: Priority.High,
-            ticker: 'New Grade');
-        var iOSPlatformChannelSpecifics = IOSNotificationDetails();
-        var platformChannelSpecifics = NotificationDetails(
-            androidPlatformChannelSpecifics, iOSPlatformChannelSpecifics);
         await flutterLocalNotificationsPlugin.show(
           0,
           'New  Grades',
@@ -232,9 +232,11 @@ class WidgetContainer extends StatefulWidget {
 
 class WidgetContainerState extends State<WidgetContainer> {
   bool seconds;
+  bool colors;
   int lunch;
   WidgetContainerState(SharedPreferences prefs) {
     seconds = prefs.getBool("SECONDS") ?? false;
+    colors = prefs.getBool("COLORS") ?? true;
     lunch = prefs.getInt("DEFAULTLUNCH");
   }
   SharedPreferences prefs;
@@ -556,7 +558,7 @@ class WidgetContainerState extends State<WidgetContainer> {
               title: Text(
                 'More Settings',
                 //style:
-                 //   TextStyle(color: Theme.of(context).colorScheme.onSurface),
+                //   TextStyle(color: Theme.of(context).colorScheme.onSurface),
               ),
               headerBackgroundColor: Theme.of(context).canvasColor,
               children: <Widget>[
@@ -570,6 +572,19 @@ class WidgetContainerState extends State<WidgetContainer> {
                         seconds = b;
                       });
                       prefs.setBool("SECONDS", seconds);
+                    },
+                  ),
+                ),
+                ListTile(
+                  title: Text('Show colors on grades?'),
+                  trailing: Switch(
+                    activeColor: Theme.of(context).accentColor,
+                    value: colors,
+                    onChanged: (bool b) {
+                      setState(() {
+                        colors = b;
+                      });
+                      prefs.setBool("COLORS", colors);
                     },
                   ),
                 ),
