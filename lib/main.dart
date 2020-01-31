@@ -1,18 +1,19 @@
 import 'package:background_fetch/background_fetch.dart';
-import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:device_id/device_id.dart';
 import 'package:dynamic_theme/dynamic_theme.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:logger_flutter/logger_flutter.dart' as logger_flutter;
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:logger/logger.dart';
+import 'package:logger_flutter/logger_flutter.dart' as logger_flutter;
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'about.dart';
 import 'athletics.dart';
 import 'attendance.dart';
 import 'changeProfile.dart';
+import 'customExpansionTile.dart' as custom;
 import 'cywoodsapp_icons.dart';
 import 'faculty.dart';
 import 'final_calculator.dart';
@@ -25,7 +26,6 @@ import 'profile.dart';
 import 'schedule.dart';
 import 'stateData.dart';
 import 'transcript.dart';
-import 'customExpansionTile.dart' as custom;
 
 void main() {
   SystemChrome.setPreferredOrientations(
@@ -209,6 +209,7 @@ class Screen {
   final String title;
   final Widget content;
   final IconData icon;
+
   const Screen(this.title, this.content, this.icon);
 }
 
@@ -216,7 +217,9 @@ class Screen {
 //It also controls which of the screens is displayed
 class WidgetContainer extends StatefulWidget {
   final SharedPreferences prefs;
+
   WidgetContainer({Key key, this.prefs}) : super(key: key);
+
   //static list of all the screens displayed on the bottom navigation bar
   static List<Screen> screens = [
     Screen('Home', Home(), Icons.home),
@@ -234,15 +237,18 @@ class WidgetContainerState extends State<WidgetContainer> {
   bool seconds;
   bool colors;
   int lunch;
+
   WidgetContainerState(SharedPreferences prefs) {
     seconds = prefs.getBool("SECONDS") ?? false;
     colors = prefs.getBool("COLORS") ?? true;
     lunch = prefs.getInt("DEFAULTLUNCH");
   }
+
   SharedPreferences prefs;
   int currentScreen = 0;
   final GlobalKey<ScheduleState> scheduleStateKey = GlobalKey<ScheduleState>();
   final GlobalKey<GradesState> gradesStateKey = GlobalKey<GradesState>();
+
   List<Widget> getActions(int currentScreen, BuildContext context) {
     switch (currentScreen) {
       case 1:
