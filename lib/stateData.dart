@@ -3,6 +3,7 @@ import 'package:logger/logger.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class StateData {
+  static int chosenTheme = 0;
   static Logger logger = Logger(
       filter: ProductionFilter(),
       printer: PrettyPrinter(
@@ -34,10 +35,12 @@ class StateData {
   static int lunch = 0;
   static int sport = 0;
   static int gender = 0;
+
   //url of the server
   //static String url = 'http://dent.ml:8080/CyWoodsAppServer';
   static String url =
-        'http://cywoodsappserver.us-west-2.elasticbeanstalk.com';
+      'http://cywoodsappserver.us-west-2.elasticbeanstalk.com';
+
 //      'http://CyWoodsAppServer-env.fsa2ppmecc.us-west-2.elasticbeanstalk.com';
   //base theme
   //use this to create any more themes
@@ -154,25 +157,27 @@ class StateData {
           bodyColor: Colors.cyanAccent, displayColor: Colors.cyanAccent));
 
   static ThemeData patriotTheme = ThemeData(
-    colorScheme: ColorScheme(
-        brightness: Brightness.light,
-        primary: Colors.red,
-        primaryVariant: Colors.red[700],
-        secondary: Colors.blue[200],
-        secondaryVariant: Colors.blue[700],
-        background: Colors.grey[200],
-        surface: Colors.white,
-        error: Colors.red,
-        onPrimary: Colors.white,
-        onSecondary: Colors.black,
-        onBackground: Colors.black,
-        onSurface: Colors.black,
-        onError: Colors.white),
-    primaryColor: Colors.red,
-    accentColor: Colors.blue[200],
-    backgroundColor: Colors.grey[200],
+      colorScheme: ColorScheme(
+          brightness: Brightness.light,
+          primary: Colors.red,
+          primaryVariant: Colors.red[700],
+          secondary: Colors.blue[200],
+          secondaryVariant: Colors.blue[700],
+          background: Colors.grey[200],
+          surface: Colors.white,
+          error: Colors.red,
+          onPrimary: Colors.white,
+          onSecondary: Colors.black,
+          onBackground: Colors.black,
+          onSurface: Colors.black,
+          onError: Colors.white),
+      primaryColor: Colors.red,
+      accentColor: Colors.blue[200],
+      backgroundColor: Colors.grey[200],
+      textTheme: Typography.whiteCupertino
+          .apply(bodyColor: Colors.blue[900], displayColor: Colors.blue[900])
   );
-  
+
   static ThemeData deepTheme = ThemeData(
       colorScheme: ColorScheme(
           brightness: Brightness.dark,
@@ -235,4 +240,5 @@ class StateData {
     }
     return "";
   }
+
 }

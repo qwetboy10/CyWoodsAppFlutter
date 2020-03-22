@@ -72,7 +72,7 @@ class MyAppState extends State<MyApp> {
         new FlutterLocalNotificationsPlugin();
 // initialise the plugin. app_icon needs to be a added as a drawable resource to the Android head project
     var initializationSettingsAndroid =
-        new AndroidInitializationSettings('@mipmap/ic_launcher');
+        new AndroidInitializationSettings('app_icon');
     var initializationSettingsIOS = new IOSInitializationSettings();
     var initializationSettings = new InitializationSettings(
         initializationSettingsAndroid, initializationSettingsIOS);
@@ -83,6 +83,7 @@ class MyAppState extends State<MyApp> {
         '0', 'Cy Woods App Grades', 'Recieve notifications of grades',
         importance: Importance.Max,
         priority: Priority.High,
+        ongoing: true,
         ticker: 'New Grade');
     var iOSPlatformChannelSpecifics = IOSNotificationDetails();
     var platformChannelSpecifics = NotificationDetails(
@@ -124,6 +125,7 @@ class MyAppState extends State<MyApp> {
     return MaterialApp(
       theme: StateData.defaultTheme,
       home: Scaffold(
+        backgroundColor: Colors.transparent,
         body: FutureBuilder(
           future: SharedPreferences.getInstance(),
           builder: (BuildContext context, AsyncSnapshot snap) {
@@ -486,7 +488,9 @@ class WidgetContainerState extends State<WidgetContainer> {
                 builder: chooseThemeDialog,
               ).then((ThemeData data) {
                 setState(() {
-                  if (data != null) DynamicTheme.of(context).setThemeData(data);
+                  if (data != null) {
+                    DynamicTheme.of(context).setThemeData(data);
+                  }
                 });
               }),
             ),
@@ -557,6 +561,7 @@ class WidgetContainerState extends State<WidgetContainer> {
                   DynamicTheme.of(context)
                       .setThemeData(StateData.getThemeByIndex(data));
                   prefs.setInt("DEFAULTTHEME", data);
+                  StateData.chosenTheme = data;
                 }
               }),
             ),
