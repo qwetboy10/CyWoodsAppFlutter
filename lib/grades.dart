@@ -14,11 +14,13 @@ import 'cywoodsapp_icons.dart';
 
 class Grades extends StatefulWidget {
   Grades({Key key}) : super(key: key);
+
   State<Grades> createState() => GradesState();
 }
 
 class GradesState extends State<Grades> {
   Future<SharedPreferences> prefs = SharedPreferences.getInstance();
+
   void refreshProfile() {
     setState(() {
       profile = Profile.getDefaultProfile();
@@ -28,6 +30,7 @@ class GradesState extends State<Grades> {
   }
 
   Future<Profile> profile = Profile.getDefaultProfile();
+
   Widget build(BuildContext context) {
     profile.then((Profile p) => p == null ? null : p.updateParser());
     return FutureBuilder(
@@ -131,70 +134,85 @@ class GradesState extends State<Grades> {
             'Parser Error.\nThe Server May Be Down For Maintenance Currently'),
       );
     }
-    return Center(
-      child: RefreshIndicator(
-        color: Theme.of(context).primaryColor,
-        child: ListView.separated(
-          itemCount: profile.parser.classes.length + 2,
-          separatorBuilder: (BuildContext context, int index) => Divider(
-            height: 1,
+    return Container(
+//        StateData.chosenTheme == 5 ?
+        decoration: StateData.chosenTheme == 5 ?
+        new BoxDecoration(
+          image: DecorationImage(
+            image: AssetImage("assets/eagle.png"),
+            fit: BoxFit.cover,
           ),
-          itemBuilder: (BuildContext context, int index) {
-            if (index == 0) {
-              return Card(
-                child: InkWell(
-                  onTap: () {
-                    Navigator.of(context)
-                        .push(
-                          MaterialPageRoute(
-                              builder: (context) => ChangeProfile(),
-                              fullscreenDialog: true),
-                        )
-                        .then((_) => refreshProfile());
-                  },
-                  child: Container(
-                    padding: const EdgeInsets.all(8.0),
-                    alignment: Alignment.center,
-                    child: Text(profile.getName()),
+        ) : new BoxDecoration(),
+        child: new Center(
+          child: RefreshIndicator(
+            color: Theme.of(context).primaryColor,
+            child: ListView.separated(
+              itemCount: profile.parser.classes.length + 2,
+              separatorBuilder: (BuildContext context, int index) => Divider(
+                height: 1,
+              ),
+              itemBuilder: (BuildContext context, int index) {
+                if (index == 0) {
+                  return Card(
+                    child: InkWell(
+                      onTap: () {
+                        Navigator.of(context)
+                            .push(
+                              MaterialPageRoute(
+                                  builder: (context) => ChangeProfile(),
+                                  fullscreenDialog: true),
+                            )
+                            .then((_) => refreshProfile());
+                      },
+                      child: Container(
+                        padding: const EdgeInsets.all(8.0),
+                        alignment: Alignment.center,
+                        child: Text(profile.getName()),
+                        decoration: BoxDecoration(
+                            color: Theme.of(context)
+                                .colorScheme
+                                .surface
+                                .withOpacity(.65)),
+                      ),
+                    ),
+                    margin: EdgeInsets.all(8),
+                  );
+                } else if (index == profile.parser.classes.length + 1) {
+                  return Container(
                     decoration: BoxDecoration(
-                        color: Theme.of(context).colorScheme.surface),
-                  ),
-                ),
-                margin: EdgeInsets.all(8),
-              );
-            } else if (index == profile.parser.classes.length + 1) {
-              return Container(
-                decoration:
-                    BoxDecoration(color: Theme.of(context).colorScheme.surface),
-                child: ListTile(
-                  title: Center(
-                    child:
-                        Text('Last Updated ${profile.parser.getLastUpdated()}'),
-                  ),
-                ),
-              );
-            } else {
-              return buildGradeTile(
-                  context, profile, index, prefs.getBool("COLORS"));
-            }
-          },
-        ),
-        onRefresh: () {
-          return profile.updateData().then((List<Assignment> changes) {
-            if (changes == null) {
-              Scaffold.of(context).showSnackBar(new SnackBar(
-                content: new Text("Grade Fetch Failed. Grades Not Updated"),
-              ));
-            } else {
-              Scaffold.of(context).showSnackBar(new SnackBar(
-                content: new Text(
-                    "Grade Fetch Succeeded. ${changes.length} New Assignment${changes.length != 1 ? 's' : ''} Found"),
-              ));
-            }
-          }).then((_) => {setState(() => profile.updateParser())});
-        },
-      ),
-    );
+                        color: Theme.of(context)
+                            .colorScheme
+                            .surface
+                            .withOpacity(.65)),
+                    child: ListTile(
+                      title: Center(
+                        child: Text(
+                            'Last Updated ${profile.parser.getLastUpdated()}'),
+                      ),
+                    ),
+                  );
+                } else {
+                  return buildGradeTile(
+                      context, profile, index, prefs.getBool("COLORS"));
+                }
+              },
+            ),
+            onRefresh: () {
+              return profile.updateData().then((List<Assignment> changes) {
+                if (changes == null) {
+                  Scaffold.of(context).showSnackBar(new SnackBar(
+                    content: new Text("Grade Fetch Failed. Grades Not Updated"),
+                  ));
+                } else {
+                  Scaffold.of(context).showSnackBar(new SnackBar(
+                    content: new Text(
+                        "Grade Fetch Succeeded. ${changes.length} New Assignment${changes.length != 1 ? 's' : ''} Found"),
+                  ));
+                }
+              }).then((_) => {setState(() => profile.updateParser())});
+            },
+          ),
+        ));
   }
 
   Widget buildGradeTile(
@@ -234,7 +252,7 @@ class GradesState extends State<Grades> {
                     child: Icon(
                       FontAwesomeIcons.solidCircle,
                       size: 8,
-                      color: Theme.of(context).primaryColor,
+                      color: Theme.of(context).primaryColor.withOpacity(.65),
                     ),
                   ),
                 ])
@@ -242,9 +260,14 @@ class GradesState extends State<Grades> {
           trailing: Text(profile.parser.classes[index - 1].getGradeString()),
         ),
         decoration: BoxDecoration(
+//          image: DecorationImage(
+//            image: AssetImage("assets/eagle.png"),
+//            fit: BoxFit.cover,
+//          ),
           gradient: getGradient(
               context, profile.parser.classes[index - 1].grade,
               color: color),
+          color: Colors.white.withOpacity(.65),
         ),
       );
     } catch (e, trace) {
