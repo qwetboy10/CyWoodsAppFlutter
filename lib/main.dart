@@ -27,8 +27,10 @@ import 'profile.dart';
 import 'schedule.dart';
 import 'stateData.dart';
 import 'transcript.dart';
+import 'clubs_more_info.dart';
 
 void main() {
+  WidgetsFlutterBinding.ensureInitialized();
   SystemChrome.setPreferredOrientations(
       [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
   ErrorWidget.builder = (FlutterErrorDetails details) {
