@@ -531,6 +531,13 @@ class WidgetContainerState extends State<WidgetContainer> {
               },
             ),
             ListTile(
+              title: Text('Clubs'),
+              onTap: () {
+                Navigator.of(context).push(MaterialPageRoute(
+                    builder: (context) => Clubs(), fullscreenDialog: true));
+              },
+            ),
+            ListTile(
               title: Text('Manage Accounts'),
               onTap: () {
                 Navigator.of(context)
