@@ -131,7 +131,7 @@ class FacultyState extends State<Faculty> {
           });
         },
       );
-//do nothing if url is not calid
+//do nothing if url is not valid
   void launchWebsite(Teacher t) async {
     if (t.website == null || t.website.length == 0) return;
     String uri = Uri.encodeFull(t.website);

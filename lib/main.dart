@@ -13,6 +13,7 @@ import 'about.dart';
 import 'athletics.dart';
 import 'attendance.dart';
 import 'changeProfile.dart';
+import 'clubs.dart';
 import 'customExpansionTile.dart' as custom;
 import 'cywoodsapp_icons.dart';
 import 'faculty.dart';
@@ -527,6 +528,13 @@ class WidgetContainerState extends State<WidgetContainer> {
                   MaterialPageRoute(
                       builder: (context) => Faculty(), fullscreenDialog: true),
                 );
+              },
+            ),
+            ListTile(
+              title: Text('Clubs'),
+              onTap: () {
+                Navigator.of(context).push(MaterialPageRoute(
+                    builder: (context) => Clubs(), fullscreenDialog: true));
               },
             ),
             ListTile(
