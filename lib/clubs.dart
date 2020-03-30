@@ -93,7 +93,7 @@ class ClubsState extends State<Clubs> {
     return ListView.separated(
       itemCount: filteredClubs.length,
       itemBuilder: (BuildContext context, int index) =>
-          buildClubTile(context, clubs[index]),
+          buildClubTile(context, filteredClubs[index]),
       separatorBuilder: (BuildContext context, int index) => Divider(
         height: 1,
       ),
