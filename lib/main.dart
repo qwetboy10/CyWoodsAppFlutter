@@ -13,6 +13,7 @@ import 'about.dart';
 import 'athletics.dart';
 import 'attendance.dart';
 import 'changeProfile.dart';
+import 'clubs.dart';
 import 'customExpansionTile.dart' as custom;
 import 'cywoodsapp_icons.dart';
 import 'faculty.dart';
