@@ -33,9 +33,11 @@ class ClubInfo {
 
 class ClubsState extends State<Clubs> {
   TextEditingController search = TextEditingController();
-  List<ClubInfo> clubs = new List<ClubInfo>();
+  List<ClubInfo> clubs;
   List<ClubInfo> filteredClubs;
-  static Map<String, dynamic> tempMap = {
+
+  //These are two temporary clubs added for testing
+  Map<String, dynamic> tempMap = {
     'clubName': 'CS Club',
     'teacherName': 'Armstrong, Stacey',
     'teacherEmail': 'stacey.armstrong@cfisd.net',
@@ -43,7 +45,7 @@ class ClubsState extends State<Clubs> {
     'startTime': '2:40',
     'endTime': '4:30'
   };
-  static Map<String, dynamic> tempMap2 = {
+  Map<String, dynamic> tempMap2 = {
     'clubName': 'Key Club',
     'teacherName': 'Kent, John',
     'teacherEmail': 'john.kent@cfisd.net',
@@ -53,6 +55,8 @@ class ClubsState extends State<Clubs> {
   };
 
   Widget build(BuildContext context) {
+    clubs = new List<ClubInfo>();
+    //adding temporary maps to clubs list
     clubs.add(new ClubInfo(tempMap));
     clubs.add(new ClubInfo(tempMap2));
     return Scaffold(
@@ -74,7 +78,7 @@ class ClubsState extends State<Clubs> {
                         search.text.length == 0 ||
                         c.clubName
                             .toLowerCase()
-                            .contains(c.clubName.toLowerCase()))
+                            .contains(search.text.toLowerCase()))
                     .toList();
               });
             },
@@ -88,6 +92,7 @@ class ClubsState extends State<Clubs> {
     );
   }
 
+//specifically adding the number of changes i made to the search text for some reason
   Widget buildClubsList(BuildContext context) {
     if (filteredClubs == null) filteredClubs = []..addAll(clubs);
     return ListView.separated(
