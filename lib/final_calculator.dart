@@ -154,7 +154,7 @@ class FinalCalculatorState extends State<FinalCalculator> {
       if (grades[0] == 2.0 && grades[1] == 1.0 && grades[2] == 2.0) {
         StateData.unlockTheme(6);
         Scaffold.of(context).showSnackBar(SnackBar(
-          content: Text('New Theme Unlocked'),
+          content: Text('Deep Theme Unlocked'),
         ));
       }
     } catch (e, t) {}

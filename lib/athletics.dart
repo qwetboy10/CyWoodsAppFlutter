@@ -134,7 +134,7 @@ class AthleticsState extends State<Athletics> {
             StateData.logInfo("Theme 5 Unlocked");
             StateData.unlockTheme(5);
             Scaffold.of(context).showSnackBar(
-                SnackBar(content: Text('Unlocked Patriot Theme')));
+                SnackBar(content: Text('Patriot Theme Unlocked')));
           }
         },
       ),

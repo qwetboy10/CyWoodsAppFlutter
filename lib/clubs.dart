@@ -27,6 +27,7 @@ class ClubInfo {
     dayOfWeek = data['dayOfWeek'];
     startTime = data['startTime'];
     endTime = data['endTime'];
+    //update description from cy woods website
     description = 'A description of the club goes here';
   }
 }
