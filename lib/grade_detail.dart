@@ -39,7 +39,7 @@ class PseudoDialogState extends State<PseudoDialog> {
                 Padding(
                   padding: const EdgeInsets.only(bottom: 8.0),
                   child: Text(
-                    'Add Fake Grade',
+                    'Add Temporary Grade',
                     style: TextStyle(fontWeight: FontWeight.bold),
                     textScaleFactor: 1.2,
                     textAlign: TextAlign.center,

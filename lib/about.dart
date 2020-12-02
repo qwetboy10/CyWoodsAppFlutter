@@ -10,6 +10,7 @@ class About extends StatefulWidget {
 class AboutState extends State<About> {
   GlobalKey key = GlobalKey();
   int buttonPresses = 0;
+
   Widget build(BuildContext context) {
     return Scaffold(
       key: key,
@@ -56,7 +57,9 @@ class AboutState extends State<About> {
               InkWell(
                 child: Center(
                     child: Text(
-                        'Developed by Tristan Wiesepape and Ronak Malik', textAlign: TextAlign.center,)),
+                  'Developed by Tristan Wiesepape and Ronak Malik',
+                  textAlign: TextAlign.center,
+                )),
                 onTap: () {
                   buttonPresses++;
                   if (buttonPresses == 13) {
@@ -64,7 +67,7 @@ class AboutState extends State<About> {
                     unlockTheme();
                     setState(() {
                       (key.currentState as ScaffoldState).showSnackBar(SnackBar(
-                        content: Text('New Theme Unlocked'),
+                        content: Text('Hacker Theme Unlocked'),
                       ));
                     });
                   }
@@ -85,6 +88,12 @@ class AboutState extends State<About> {
                                             (SharedPreferences prefs) =>
                                                 prefs.setBool("ADMIN", true));
                                         StateData.logInfo('Admin Enabled');
+                                        setState(() {
+                                          (key.currentState as ScaffoldState)
+                                              .showSnackBar(SnackBar(
+                                            content: Text('Admin Mode Enabled'),
+                                          ));
+                                        });
                                       } else if (s == 'DUMBYTHICC') {
                                         SharedPreferences.getInstance()
                                             .then((SharedPreferences prefs) {
@@ -93,6 +102,13 @@ class AboutState extends State<About> {
                                           prefs.setBool("THEME4", true);
                                           prefs.setBool("THEME5", true);
                                           prefs.setBool("THEME6", true);
+                                        });
+                                        setState(() {
+                                          (key.currentState as ScaffoldState)
+                                              .showSnackBar(SnackBar(
+                                            content:
+                                                Text('All Themes Unlocked'),
+                                          ));
                                         });
                                       }
                                       Navigator.of(context).pop();
